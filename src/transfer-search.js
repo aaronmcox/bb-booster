@@ -1,4 +1,5 @@
 
+
 function getFormData() {
   const searchContainer = document.getElementById("ctl00_cphContent_pnlTL");
 
@@ -74,3 +75,31 @@ function retrieveSearchData(name) {
       return undefined;
     });
 }
+
+const model = {
+  currentPreset: undefined,
+};
+
+const controls = ([searchNames]) =>
+  <div>
+    <div>
+      <select id="currentPreset">
+        {searchNames.map(name =>
+          <option value={name}>{name}</option>
+        )}
+      </select>
+      <button id="loadPresetButton">
+        Load
+      </button>
+    </div>
+    <div>
+      <input type="text" />
+      <button id="savePresetButton">
+        Save
+      </button>
+    </div>
+  </div>;
+
+
+
+
