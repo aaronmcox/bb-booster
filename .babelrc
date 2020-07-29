@@ -1,10 +1,10 @@
 
 {
-  "presets": ["@babel/preset-env"],
-  "plugins": [
-    ["@babel/plugin-transform-react-jsx", {
-        "pragma": "el"
+  "presets": [
+    ["@babel/preset-typescript", {
+      "isTSX": true,
+      "jsxPragma": "el",
+      "allExtensions": true
     }]
   ]
 }
-
