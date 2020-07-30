@@ -1,10 +1,9 @@
 
 import { el } from "./dom/jsx-runtime";
 import { SearchPreset } from "./SearchPreset";
-import StorageArray = browser.storage.StorageArray;
 
 const presetsStorageName: string = "transfer-search-presets";
-let presets: SearchPreset[] = [];
+let transferSearchPresets: SearchPreset[] = [];
 
 function getFormData(): Record<string, any> {
   const searchContainer: HTMLElement = document.getElementById("ctl00_cphContent_pnlTL");
@@ -34,38 +33,40 @@ function saveSearch(name: string): void {
       name
   };
 
-  const matchingPresetIndex = presets.findIndex(preset => preset.name === name);
+  const matchingPresetIndex = transferSearchPresets.findIndex(preset => preset.name === name);
 
   if( matchingPresetIndex !== -1 ) {
-    presets[matchingPresetIndex] = searchData;
+    transferSearchPresets[matchingPresetIndex] = searchData;
   } else {
-    presets.push(searchData);
+    transferSearchPresets.push(searchData);
   }
 
   browser.storage.local.set({
-    [presetsStorageName]: JSON.stringify(presets)
+    [presetsStorageName]: JSON.stringify(transferSearchPresets)
   })
 }
 
 
 function loadSearchData(name: string): void {
+    const preset: SearchPreset|undefined = transferSearchPresets.find(preset => preset.name === name);
 
-  retrieveSearchData(name)
-    .then(idsToData => {
-      for(const id of Object.getOwnPropertyNames(idsToData)) {
-        const value = idsToData[id];
-        // TODO: make sure we can differentiate between value and checked the right way
-        const element = document.getElementById(id);
+    if( !preset ) {
+        console.debug(`Preset ${name} not found!`);
+    }
 
-        if( !!element ) {
-          if( typeof value === "boolean" ) {
-            element.checked = value;
-          } else {
-            element.value = value;
-          }
+    for(const id of Object.getOwnPropertyNames(preset.data)) {
+      const value = preset.data[id];
+      // TODO: make sure we can differentiate between value and checked the right way
+      const element = document.getElementById(id) as HTMLInputElement;
+
+      if( !!element ) {
+        if( typeof value === "boolean" ) {
+          element.checked = value;
+        } else {
+          element.value = value;
         }
       }
-    })
+    }
 }
 
 function retrieveTransferPresets(): Promise<SearchPreset[]> {
@@ -83,47 +84,55 @@ function retrieveTransferPresets(): Promise<SearchPreset[]> {
         });
 }
 
-const createControls = (searchNames) =>
-<div id="transfer-search-container">
-  <div>
-    <select id="currentPreset" onChange={ev => loadSearchData(ev.target.value)}>
-      {searchNames.map(name =>
-        <option value={name}>{name}</option>
-      )}
-    </select>
-  </div>
-  <div>
-    <input id="presetTextBox" type="text" />
-    <button
-      id="savePresetButton"
-      onClick={() => saveSearch(document.getElementById("presetTextBox").value)}
-      type="button"
-    >
-      Save
-    </button>
-  </div>
-</div>;
+function onSaveSearchClick() {
+    const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
+
+    saveSearch(presetTextBox.value);
+}
+
+ const createControls = (searchNames) =>
+     <div id="transfer-search-container">
+       <div>
+         <select id="currentPresetSelect">
+           {searchNames.map(name =>
+             <option value={name}>{name}</option>
+           )}
+         </select>
+       </div>
+       <div>
+         <input id="presetTextBox" type="text" />
+         <button
+           id="savePresetButton"
+           type="button">
+           Save
+         </button>
+       </div>
+     </div>;
 
 
 
-transferSearchPresets
-  .subscribe(presets => {
-    let controlsContainer = document.getElementById("transfer-search-container");
+//let controlsContainer = document.getElementById("transfer-search-container");
 
-    if( !!controlsContainer ) {
-      controlsContainer.remove();
-    }
-
-    const presetNames = presets.map(preset => preset.name);
-    controlsContainer = createControls(presetNames);
-    const searchPanel = document.getElementById("searchpanel");
-    searchPanel.prepend(controlsContainer);
-  });
+// if( !!controlsContainer ) {
+//   controlsContainer.remove();
+// }
 
 retrieveTransferPresets()
-  .subscribe(presets => {
-    transferSearchPresets.next(presets);
-  });
+    .then((presets: SearchPreset[]) => {
+        transferSearchPresets = presets;
+
+        const presetNames = presets.map(preset => preset.name);
+        const controlsContainer = createControls(presetNames);
+        const searchPanel = document.getElementById("searchpanel");
+        searchPanel.prepend(controlsContainer);
+
+        const savePresetButton = document.getElementById("savePresetButton");
+        savePresetButton.onclick = onSaveSearchClick;
+
+        const currentPresetSelect = document.getElementById("currentPresetSelect");
+        currentPresetSelect.onchange = (ev: Event) => { loadSearchData((ev.target as HTMLSelectElement).value) };
+    })
+
 
 
 
