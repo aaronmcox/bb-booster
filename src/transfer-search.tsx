@@ -18,6 +18,7 @@ function getFormData(): Record<string, any> {
       if (input.type === "text") {
           idsToData[input.id] = input.value;
       }
+
   }
   for(const select of selects) {
       idsToData[select.id] = select.value;
@@ -91,7 +92,7 @@ function onSaveSearchClick() {
 }
 
  const createControls = (searchNames) =>
-     <div id="transfer-search-container">
+     <div id="transfer-search-container" className={["boxcontent"]}>
        <div>
          <select id="currentPresetSelect">
            {searchNames.map(name =>
