@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-babel": "babel src -d lib",
-    "build": "parcel build src/transfer-search.ts",
+    "build": "parcel build src/manifest.json",
     "watch": "parcel watch src/manifest.json"
   },
   "author": "Aaron Cox",

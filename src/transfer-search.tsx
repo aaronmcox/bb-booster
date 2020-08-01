@@ -5,10 +5,6 @@ import {PresetInputType} from "./preset-input-type";
 import {PresetInput} from "./preset-input";
 import {TransferSearchViewModel} from "./transfer-search-view-model";
 
-const presetsStorageName: string = "transfer-search-presets";
-let transferSearchPresets: Preset[] = [];
-
-
 function getFormData(): PresetData {
   const searchContainer: HTMLElement = document.getElementById("ctl00_cphContent_pnlTL");
   const presetData: PresetData = {};
@@ -57,31 +53,15 @@ function getFormData(): PresetData {
 
 function saveSearch(name: string): void {
   const searchData: Preset = {
-    data: getFormData(),
-    name
+    name,
+    data: getFormData()
   };
 
-  const matchingPresetIndex = transferSearchPresets.findIndex(preset => preset.name === name);
-
-  if (matchingPresetIndex !== -1) {
-    transferSearchPresets[matchingPresetIndex] = searchData;
-  } else {
-    transferSearchPresets.push(searchData);
-  }
-
-  browser.storage.local.set({
-    [presetsStorageName]: JSON.stringify(transferSearchPresets)
-  })
+  viewModel.savePreset(searchData)
 }
 
 
-function loadSearchData(name: string): void {
-    const preset: Preset|undefined = transferSearchPresets.find(preset => preset.name === name);
-
-    if( !preset ) {
-        console.debug(`Preset ${name} not found!`);
-    }
-
+function loadSearchData(preset: Preset): void {
     for(const id of Object.getOwnPropertyNames(preset.data)) {
       const input = preset.data[id];
 
@@ -95,26 +75,6 @@ function loadSearchData(name: string): void {
         }
       }
     }
-}
-
-// function retrieveTransferPresets(): Promise<Preset[]> {
-//   return browser.storage.local.get(presetsStorageName)
-//     .then(results => results[presetsStorageName])
-//     .then((presetsJson: string | undefined) => {
-//       if (!!presetsJson) {
-//         return JSON.parse(presetsJson) as Preset[];
-//       }
-//       return [];
-//     })
-//     .catch(error => {
-//       console.debug(error);
-//       return [];
-//     });
-// }
-
-function onSaveSearchClick() {
-  const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
-  saveSearch(presetTextBox.value);
 }
 
 const createControls = (searchNames) =>
@@ -141,39 +101,28 @@ const viewModel = new TransferSearchViewModel(browser.storage.local);
 viewModel
   .presets
   .subscribe((presets: Preset[]) => {
-    transferSearchPresets = presets;
-
     const presetNames = presets.map(preset => preset.name);
     const controlsContainer = createControls(presetNames);
     const searchPanel = document.getElementById("searchpanel");
     searchPanel.prepend(controlsContainer);
 
+    const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
     const savePresetButton = document.getElementById("savePresetButton");
-    savePresetButton.onclick = onSaveSearchClick;
+    savePresetButton.onclick = () => saveSearch(presetTextBox.value);
 
     const currentPresetSelect = document.getElementById("currentPresetSelect");
     currentPresetSelect.onchange = (ev: Event) => {
-      loadSearchData((ev.target as HTMLSelectElement).value)
+      viewModel.selectPreset((ev.target as HTMLSelectElement).value);
     };
   })
 
-// retrieveTransferPresets()
-//   .then((presets: Preset[]) => {
-//     transferSearchPresets = presets;
-//
-//     const presetNames = presets.map(preset => preset.name);
-//     const controlsContainer = createControls(presetNames);
-//     const searchPanel = document.getElementById("searchpanel");
-//     searchPanel.prepend(controlsContainer);
-//
-//     const savePresetButton = document.getElementById("savePresetButton");
-//     savePresetButton.onclick = onSaveSearchClick;
-//
-//     const currentPresetSelect = document.getElementById("currentPresetSelect");
-//     currentPresetSelect.onchange = (ev: Event) => {
-//       loadSearchData((ev.target as HTMLSelectElement).value)
-//     };
-//   });
+viewModel
+  .selectedPreset
+  .subscribe((preset: Preset | undefined) => {
+    if( !!preset ) {
+      loadSearchData(preset);
+    }
+  });
 
 
 
