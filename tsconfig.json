@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "module": "es6",
-    "target": "es6",
+    "importHelpers": true,
+    "module": "CommonJS",
+    "target": "ES2017",
     "sourceMap": true,
     "jsx": "react",
     "jsxFactory": "el",
     "lib": [
-      "ES2017",
+      "ESNEXT",
       "DOM",
       "DOM.Iterable",
       "ScriptHost"
