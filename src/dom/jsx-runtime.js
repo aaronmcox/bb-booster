@@ -1,4 +1,4 @@
-import { classNames } from "./classname";
+import {classNames} from "./classname";
 
 const setClassNames = (dom, value) => {
     dom.setAttribute('class', classNames(value));
