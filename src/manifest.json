@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "version": "0.0.0",
-  "name": "BuzzerBeater Helper",
+  "name": "BuzzerBeater Booster",
 
   "content_scripts": [
     {

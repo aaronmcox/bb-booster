@@ -5,6 +5,12 @@
     "sourceMap": true,
     "jsx": "react",
     "jsxFactory": "el",
+    "lib": [
+      "ES2017",
+      "DOM",
+      "DOM.Iterable",
+      "ScriptHost"
+    ],
     "typeRoots": [
       "./node_modules/@types",
       "./node_modules/web-ext-types"
