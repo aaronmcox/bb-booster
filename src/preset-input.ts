@@ -1,4 +1,4 @@
-import {PresetInputType} from "./PresetInputType";
+import {PresetInputType} from "./preset-input-type";
 
 export interface PresetInput {
     id: string,
