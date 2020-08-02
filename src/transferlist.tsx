@@ -103,11 +103,16 @@ const createControls = (searchNames) =>
   <div id="transfer-search-container" className={["boxcontent"]}>
     <div>
       <select id="currentPresetSelect">
-        <option value="undefined">...</option>
+        <option>...</option>
         {searchNames.map(name =>
           <option value={name}>{name}</option>
         )}
       </select>
+      <button
+        id="deletePresetButton"
+        type="button">
+        Delete
+      </button>
     </div>
     <div>
       <input id="presetTextBox" type="text"/>
@@ -142,10 +147,13 @@ viewModel
       const savePresetButton = document.getElementById("savePresetButton");
       savePresetButton.onclick = () => saveSearch(presetTextBox.value);
 
-      const currentPresetSelect = document.getElementById("currentPresetSelect");
+      const currentPresetSelect = document.getElementById("currentPresetSelect") as HTMLSelectElement;
       currentPresetSelect.onchange = (ev: Event) => {
         viewModel.selectPreset((ev.target as HTMLSelectElement).value);
       };
+
+      const deleteButton = document.getElementById("deletePresetButton");
+      deleteButton.onclick = () => viewModel.deletePreset(currentPresetSelect.value);
     }
 
     if (update.selectedPreset.isUpdated) {

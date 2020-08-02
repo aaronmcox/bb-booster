@@ -27,8 +27,8 @@ export class TransferListViewModel {
 
   updates: Observable<TransferListUpdate> = this._updates;
 
-  savePreset(preset: Preset) {
-    this.retrievePresets()
+  savePreset(preset: Preset): Promise<void> {
+    return this.retrievePresets()
       .then((presets: Preset[]) => {
         const matchedPresetIndex = presets.findIndex(thisPreset => thisPreset.name === preset.name);
 
@@ -55,8 +55,32 @@ export class TransferListViewModel {
       })
   }
 
-  deletePreset(preset: Preset): Promise<boolean> {
-    throw new Error("deletePreset is not implemented");
+  deletePreset(presetName: string): Promise<void> {
+    return this.retrievePresets()
+      .then((presets: Preset[]) => {
+        const presetIndex = presets.findIndex(thisPreset => thisPreset.name === presetName);
+
+        if( presetIndex === -1 ) {
+          return;
+        }
+
+        presets.splice(presetIndex, 1);
+
+        this._storage.set({
+          [presetsStorageName]: JSON.stringify(presets)
+        })
+
+        this._presets = presets;
+        this._selectedPreset = undefined;
+
+        this._updates.next({
+          presets: updated(this._presets),
+          selectedPreset: updated(this._selectedPreset)
+        });
+      })
+      .catch(err => {
+        console.debug(err);
+      });
   }
 
   selectPreset(presetName: string) {
