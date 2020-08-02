@@ -1,6 +1,6 @@
-import {PresetData} from "./PresetData";
+import {PresetInput} from "./preset-input";
 
 export interface Preset {
     name: string,
-    data: PresetData
+    data: PresetInput[]
 }

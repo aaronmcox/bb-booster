@@ -1,20 +1,18 @@
 import {el} from "./dom/jsx-runtime";
 import {Preset} from "./preset";
-import {PresetData} from "./preset-data";
 import {PresetInputType} from "./preset-input-type";
 import {PresetInput} from "./preset-input";
 import {TransferListViewModel} from "./transfer-list-view-model";
 import {TransferListUpdate} from "./transfer-list-update";
 
-function getFormData(): PresetData {
+function getFormData(): PresetInput[] {
   const searchContainer: HTMLElement = document.getElementById("ctl00_cphContent_pnlTL");
-  const presetData: PresetData = {};
+  const presetData: PresetInput[] = [];
   const inputs = searchContainer.getElementsByTagName("input");
   const selects = searchContainer.getElementsByTagName("select");
 
   for (const input of inputs) {
     if( !input.id || !Object.values(PresetInputType).includes(input.type as PresetInputType) ) {
-      // TODO: some sort of log?
       continue;
     }
 
@@ -30,7 +28,7 @@ function getFormData(): PresetData {
       presetInput.value = input.value;
     }
 
-    presetData[presetInput.id] = presetInput;
+    presetData.push(presetInput);
   }
 
   for (const select of selects) {
@@ -45,7 +43,7 @@ function getFormData(): PresetData {
       value: select.value
     };
 
-    presetData[presetInput.id] = presetInput;
+    presetData.push(presetInput);
   }
 
   return presetData;
@@ -70,19 +68,33 @@ function loadSearchData(preset: Preset): void {
   const currentPresetSelect = document.getElementById("currentPresetSelect") as HTMLInputElement;
   currentPresetSelect.value = preset.name;
 
-  // TODO: make preset data an array instead of object??
-  for (const id of Object.getOwnPropertyNames(preset.data)) {
-    const input = preset.data[id];
+  for (const input of preset.data) {
+    const inputElement = document.getElementById(input.id) as HTMLInputElement;
 
-    const element = document.getElementById(id) as HTMLInputElement;
-
-    // TODO: enable skills
     if (!!input) {
       if (input.inputType === PresetInputType.CheckBox) {
-        element.checked = input.value;
+        inputElement.checked = input.value;
       } else {
-        element.value = input.value;
+        inputElement.value = input.value;
       }
+    }
+  }
+
+  toggleMinMaxDisabledState();
+}
+
+function toggleMinMaxDisabledState() {
+  for(let i = 1; i <= 8; i++) {
+    const skillElement = document.getElementById(`ctl00_cphContent_ddlSkill${i}`) as HTMLSelectElement;
+    const skillMin = document.getElementById(`ctl00_cphContent_ddlSkill${i}Min`) as HTMLSelectElement;
+    const skillMax = document.getElementById(`ctl00_cphContent_ddlSkill${i}Max`) as HTMLSelectElement;
+
+    if( !!skillElement.value && skillElement.value !== "0" ) {
+      skillMin.disabled = false;
+      skillMax.disabled = false;
+    } else {
+      skillMin.disabled = true;
+      skillMax.disabled = true;
     }
   }
 }
@@ -91,6 +103,7 @@ const createControls = (searchNames) =>
   <div id="transfer-search-container" className={["boxcontent"]}>
     <div>
       <select id="currentPresetSelect">
+        <option value="undefined">...</option>
         {searchNames.map(name =>
           <option value={name}>{name}</option>
         )}
@@ -111,7 +124,7 @@ const viewModel = new TransferListViewModel(browser.storage.local);
 viewModel
   .updates
   .subscribe((update: TransferListUpdate) => {
-    if( update.presets.isUpdated  ) {
+    if (update.presets.isUpdated) {
       const presetNames = update.presets.payload.map(preset => preset.name);
 
       const controlsContainer = createControls(presetNames);
@@ -119,7 +132,7 @@ viewModel
       const searchPanel = document.getElementById("searchpanel");
       const existingSearchContainer = document.getElementById("transfer-search-container");
 
-      if( !!existingSearchContainer ) {
+      if (!!existingSearchContainer) {
         existingSearchContainer.remove();
       }
 
@@ -135,16 +148,8 @@ viewModel
       };
     }
 
-    if( update.selectedPreset.isUpdated ) {
+    if (update.selectedPreset.isUpdated) {
       loadSearchData(update.selectedPreset.payload);
     }
 
   })
-
-
-
-
-
-
-
-
