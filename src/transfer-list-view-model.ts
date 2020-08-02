@@ -1,24 +1,31 @@
 import {Preset} from "./preset";
 import {Observable, ReplaySubject, BehaviorSubject} from "rxjs";
 import StorageArea = browser.storage.StorageArea;
+import {TransferListUpdate} from "./transfer-list-update";
+import {unchanged, updated} from "./update";
 
 export const presetsStorageName: string = "transfer-search-presets";
 
-export class TransferSearchViewModel {
-  private _presets: ReplaySubject<Preset[]> = new ReplaySubject<Preset[]>(1);
-  private _selectedPreset: BehaviorSubject<Preset> = new BehaviorSubject<Preset>(undefined);
+export class TransferListViewModel {
+  private _selectedPreset: Preset;
+  private _presets: Preset[];
+  private _updates: ReplaySubject<TransferListUpdate> = new ReplaySubject<TransferListUpdate>(1);
 
   constructor(
     private _storage: StorageArea
   ) {
     this.retrievePresets()
       .then(presets => {
-        this._presets.next(presets);
+        this._presets = presets;
+
+        this._updates.next({
+          presets: updated(this._presets),
+          selectedPreset: updated(this._selectedPreset)
+        })
       })
   }
 
-  presets: Observable<Preset[]> = this._presets;
-  selectedPreset: Observable<Preset> = this._selectedPreset;
+  updates: Observable<TransferListUpdate> = this._updates;
 
   savePreset(preset: Preset) {
     this.retrievePresets()
@@ -31,14 +38,17 @@ export class TransferSearchViewModel {
           presets[matchedPresetIndex] = preset;
         }
 
-        return presets;
-      })
-      .then((presets: Preset[]) =>
         this._storage.set({
           [presetsStorageName]: JSON.stringify(presets)
-        }))
-      .then(() => {
-        this._selectedPreset.next(preset);
+        })
+
+        this._presets = presets;
+        this._selectedPreset = preset;
+
+        this._updates.next({
+          selectedPreset: updated(this._selectedPreset),
+          presets: updated(this._presets)
+        });
       })
       .catch(err => {
         console.debug(err);
@@ -50,16 +60,14 @@ export class TransferSearchViewModel {
   }
 
   selectPreset(presetName: string) {
-    this.retrievePresets()
-      .then((presets: Preset[]) => {
-        const matched = presets.find(preset => preset.name === presetName);
+    const matched = this._presets.find(preset => preset.name === presetName);
 
-        if( !!matched ) {
-          this._selectedPreset.next(matched);
-        } else {
-          this._selectedPreset.next(undefined);
-        }
-      })
+    this._selectedPreset = !!matched ? matched : undefined;
+
+    this._updates.next({
+      presets: unchanged(this._presets),
+      selectedPreset: updated(this._selectedPreset)
+    });
   }
 
   private retrievePresets(): Promise<Preset[]> {
@@ -76,5 +84,4 @@ export class TransferSearchViewModel {
         return [];
       });
   }
-
 }

@@ -3,7 +3,8 @@ import {Preset} from "./preset";
 import {PresetData} from "./preset-data";
 import {PresetInputType} from "./preset-input-type";
 import {PresetInput} from "./preset-input";
-import {TransferSearchViewModel} from "./transfer-search-view-model";
+import {TransferListViewModel} from "./transfer-list-view-model";
+import {TransferListUpdate} from "./transfer-list-update";
 
 function getFormData(): PresetData {
   const searchContainer: HTMLElement = document.getElementById("ctl00_cphContent_pnlTL");
@@ -62,19 +63,26 @@ function saveSearch(name: string): void {
 
 
 function loadSearchData(preset: Preset): void {
-    for(const id of Object.getOwnPropertyNames(preset.data)) {
-      const input = preset.data[id];
+  if( !preset ) {
+    return;
+  }
 
-      const element = document.getElementById(id) as HTMLInputElement;
+  const currentPresetSelect = document.getElementById("currentPresetSelect") as HTMLInputElement;
+  currentPresetSelect.value = preset.name;
 
-      if( !!input ) {
-        if( input.inputType === PresetInputType.CheckBox ) {
-          element.checked = input.value;
-        } else {
-          element.value = input.value;
-        }
+  for (const id of Object.getOwnPropertyNames(preset.data)) {
+    const input = preset.data[id];
+
+    const element = document.getElementById(id) as HTMLInputElement;
+
+    if (!!input) {
+      if (input.inputType === PresetInputType.CheckBox) {
+        element.checked = input.value;
+      } else {
+        element.value = input.value;
       }
     }
+  }
 }
 
 const createControls = (searchNames) =>
@@ -96,33 +104,40 @@ const createControls = (searchNames) =>
     </div>
   </div>;
 
-const viewModel = new TransferSearchViewModel(browser.storage.local);
+const viewModel = new TransferListViewModel(browser.storage.local);
 
 viewModel
-  .presets
-  .subscribe((presets: Preset[]) => {
-    const presetNames = presets.map(preset => preset.name);
-    const controlsContainer = createControls(presetNames);
-    const searchPanel = document.getElementById("searchpanel");
-    searchPanel.prepend(controlsContainer);
+  .updates
+  .subscribe((update: TransferListUpdate) => {
+    if( update.presets.isUpdated  ) {
+      const presetNames = update.presets.payload.map(preset => preset.name);
 
-    const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
-    const savePresetButton = document.getElementById("savePresetButton");
-    savePresetButton.onclick = () => saveSearch(presetTextBox.value);
+      const controlsContainer = createControls(presetNames);
 
-    const currentPresetSelect = document.getElementById("currentPresetSelect");
-    currentPresetSelect.onchange = (ev: Event) => {
-      viewModel.selectPreset((ev.target as HTMLSelectElement).value);
-    };
-  })
+      const searchPanel = document.getElementById("searchpanel");
+      const existingSearchContainer = document.getElementById("transfer-search-container");
 
-viewModel
-  .selectedPreset
-  .subscribe((preset: Preset | undefined) => {
-    if( !!preset ) {
-      loadSearchData(preset);
+      if( !!existingSearchContainer ) {
+        existingSearchContainer.remove();
+      }
+
+      searchPanel.prepend(controlsContainer);
+
+      const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
+      const savePresetButton = document.getElementById("savePresetButton");
+      savePresetButton.onclick = () => saveSearch(presetTextBox.value);
+
+      const currentPresetSelect = document.getElementById("currentPresetSelect");
+      currentPresetSelect.onchange = (ev: Event) => {
+        viewModel.selectPreset((ev.target as HTMLSelectElement).value);
+      };
     }
-  });
+
+    if( update.selectedPreset.isUpdated ) {
+      loadSearchData(update.selectedPreset.payload);
+    }
+
+  })
 
 
 

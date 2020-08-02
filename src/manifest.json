@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.buzzerbeater.com/manage/transferlist.aspx"],
-      "js": ["transfer-search.tsx"]
+      "js": ["transferlist.tsx"]
     }
   ],
 
