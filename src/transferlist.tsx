@@ -70,11 +70,13 @@ function loadSearchData(preset: Preset): void {
   const currentPresetSelect = document.getElementById("currentPresetSelect") as HTMLInputElement;
   currentPresetSelect.value = preset.name;
 
+  // TODO: make preset data an array instead of object??
   for (const id of Object.getOwnPropertyNames(preset.data)) {
     const input = preset.data[id];
 
     const element = document.getElementById(id) as HTMLInputElement;
 
+    // TODO: enable skills
     if (!!input) {
       if (input.inputType === PresetInputType.CheckBox) {
         element.checked = input.value;
