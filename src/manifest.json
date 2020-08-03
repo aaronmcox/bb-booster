@@ -8,6 +8,11 @@
       "matches": ["*://*.buzzerbeater.com/manage/transferlist.aspx"],
       "js": ["transferlist/transferlist.tsx"],
       "css": ["bbb.scss"]
+    },
+    {
+      "matches": ["*://*.buzzerbeater.com/*"],
+      "js": ["next-opponent/next-opponent.tsx"],
+      "css": ["bbb.scss"]
     }
   ],
 
