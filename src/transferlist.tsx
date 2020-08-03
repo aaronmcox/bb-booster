@@ -103,7 +103,7 @@ const createControls = (searchNames) =>
   <div id="transfer-search-container" className={["boxcontent"]}>
     <div>
       <select id="currentPresetSelect">
-        <option>...</option>
+        <option value="...">...</option>
         {searchNames.map(name =>
           <option value={name}>{name}</option>
         )}
