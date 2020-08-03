@@ -1,7 +1,7 @@
-import {el} from "./dom/jsx-runtime";
-import {Preset} from "./preset";
-import {PresetInputType} from "./preset-input-type";
-import {PresetInput} from "./preset-input";
+import {el} from "../dom/jsx-runtime";
+import {Preset} from "../preset";
+import {PresetInputType} from "../preset-input-type";
+import {PresetInput} from "../preset-input";
 import {TransferListViewModel} from "./transfer-list-view-model";
 import {TransferListUpdate} from "./transfer-list-update";
 
@@ -100,28 +100,50 @@ function toggleMinMaxDisabledState() {
 }
 
 const createControls = (searchNames) =>
-  <div id="transfer-search-container" className={["boxcontent"]}>
-    <div>
-      <select id="currentPresetSelect">
-        <option value="...">...</option>
-        {searchNames.map(name =>
-          <option value={name}>{name}</option>
-        )}
-      </select>
-      <button
-        id="deletePresetButton"
-        type="button">
-        Delete
-      </button>
-    </div>
-    <div>
-      <input id="presetTextBox" type="text"/>
-      <button
-        id="savePresetButton"
-        type="button">
-        Save
-      </button>
-    </div>
+  <div id="transfer-search-container" className={["bbb-section"]}>
+    <table>
+      <tr>
+        <td className={["bbb-table-label"]}>
+          <label>Presets:</label>
+        </td>
+        <td>
+          <select id="currentPresetSelect">
+            {searchNames.map(name =>
+                <option value={name}>{name}</option>
+            )}
+            <option value="" disabled selected>Load Preset...</option>
+          </select>
+        </td>
+        <td>
+          <input
+              id="topSearchButton"
+              className={["button"]}
+              type="button"
+              value="Search"
+            />
+        </td>
+        <td>
+          <input
+              id="deletePresetButton"
+              className={["button"]}
+              type="button"
+              value="Delete"/>
+        </td>
+      </tr>
+      <tr>
+        <td className={["bbb-table-label"]}/>
+        <td>
+          <input id="presetTextBox" type="text" placeholder="New Preset..." />
+        </td>
+        <td>
+          <input
+              id="savePresetButton"
+              className={["button"]}
+              type="button"
+              value="Save"/>
+        </td>
+      </tr>
+    </table>
   </div>;
 
 const viewModel = new TransferListViewModel(browser.storage.local);
@@ -134,14 +156,14 @@ viewModel
 
       const controlsContainer = createControls(presetNames);
 
-      const searchPanel = document.getElementById("searchpanel");
+      const searchPanel = document.getElementById("ctl00_cphContent_pnlTL");
       const existingSearchContainer = document.getElementById("transfer-search-container");
 
       if (!!existingSearchContainer) {
         existingSearchContainer.remove();
       }
 
-      searchPanel.prepend(controlsContainer);
+      searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
 
       const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
       const savePresetButton = document.getElementById("savePresetButton");
@@ -154,10 +176,14 @@ viewModel
 
       const deleteButton = document.getElementById("deletePresetButton");
       deleteButton.onclick = () => viewModel.deletePreset(currentPresetSelect.value);
+
+      const topSearchButton = document.getElementById("topSearchButton");
+      const bottomSearchButton = document.getElementById("ctl00_cphContent_btnSearch");
+      topSearchButton.onclick = () => { bottomSearchButton.click(); };
     }
 
     if (update.selectedPreset.isUpdated) {
       loadSearchData(update.selectedPreset.payload);
     }
 
-  })
+  });

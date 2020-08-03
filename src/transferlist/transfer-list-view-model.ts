@@ -1,8 +1,8 @@
-import {Preset} from "./preset";
-import {Observable, ReplaySubject, BehaviorSubject} from "rxjs";
+import {Preset} from "../preset";
+import {Observable, ReplaySubject} from "rxjs";
 import StorageArea = browser.storage.StorageArea;
 import {TransferListUpdate} from "./transfer-list-update";
-import {unchanged, updated} from "./update";
+import {unchanged, updated} from "../update";
 
 export const presetsStorageName: string = "transfer-search-presets";
 
