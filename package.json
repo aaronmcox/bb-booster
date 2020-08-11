@@ -7,13 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-babel": "babel src -d lib",
     "build": "parcel build src/manifest.json",
-    "watch": "parcel watch src/manifest.json"
+    "watch": "parcel watch src/manifest.json",
+    "clean": "rimraf ./dist"
   },
   "author": "Aaron Cox",
   "license": "MIT",
   "devDependencies": {
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-web-extension": "^1.6.1",
+    "rimraf": "^3.0.2",
     "sass": "^1.26.10",
     "typescript": "^3.9.7",
     "web-ext-types": "^3.2.1",
