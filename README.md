@@ -1,4 +1,6 @@
-# BB Booster
+# &nbsp;![BB Booster Icon](./src/assets/images/bbb-icon-96.png) BB Booster
+
+
 
 A browser extension with some display and usability enhancements for the online basketball manager game, BuzzerBeater.
 
