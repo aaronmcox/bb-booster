@@ -101,7 +101,7 @@ function toggleMinMaxDisabledState() {
 }
 
 const createControls = (searchNames) =>
-  <div id="transfer-search-container" className={["bbb-section"]}>
+  <div id="transfer-search-container" className={["bbb-section", "bbb-lighter"]}>
     <table>
       <tr>
         <td className={["bbb-table-label"]}>
