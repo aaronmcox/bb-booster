@@ -11,7 +11,9 @@
     },
     {
       "matches": ["*://*.buzzerbeater.com/*"],
-      "js": ["next-opponent/next-opponent.tsx"],
+      "js": [
+        "next-opponent/next-opponent.tsx"
+      ],
       "css": ["bbb.scss"]
     }
   ],

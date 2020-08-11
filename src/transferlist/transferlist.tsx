@@ -4,6 +4,7 @@ import {PresetInputType} from "../preset-input-type";
 import {PresetInput} from "../preset-input";
 import {TransferListViewModel} from "./transfer-list-view-model";
 import {TransferListUpdate} from "./transfer-list-update";
+import {browser} from "webextension-polyfill-ts";
 
 function getFormData(): PresetInput[] {
   const searchContainer: HTMLElement = document.getElementById("ctl00_cphContent_pnlTL");
