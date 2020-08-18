@@ -15,4 +15,3 @@ Light on features for the time being. The goal is to continue to add features wi
 ## Browser Support
 
 - Firefox
-- Chrome
