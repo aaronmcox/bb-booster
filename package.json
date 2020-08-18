@@ -1,15 +1,15 @@
 {
-  "name": "buzzer-beater-booster",
+  "name": "bb-booster",
   "version": "0.0.0",
   "description": "browser extension for BuzzerBeater basketball simulator, chock full of enhancements",
   "main": "transfer-search.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel watch src/manifest.json",
-    "serve": "web-ext --source-dir ./dist run",
     "build": "parcel build src/manifest.json",
-    "publish": "mkdir publish || (zip -r ./publish/bb-booster.source.zip package.json npm-shrinkwrap.json src tsconfig.json) && (zip -r ./publish/bb-booster.zip dist/*)",
-    "clean": "rm -fr ./dist"
+    "serve": "web-ext --source-dir ./dist run",
+    "publish": "./publish.sh",
+    "clean": "rm -fr ./dist ./publish"
   },
   "author": "Aaron Cox",
   "license": "MIT",
