@@ -11,7 +11,7 @@ function createControls(teamId: string): HTMLElement {
   );
 }
 
-function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: HTMLElement | undefined): void {
+function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: Element | undefined): void {
   const teamIdRegex = /.*team\/([0-9]+).*/g;
 
   const matches = [...nextOpponentAnchor.href.matchAll(teamIdRegex)];
@@ -29,8 +29,8 @@ function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: HTM
   priorElement.insertAdjacentElement("afterend", links);
 }
 
-const nextOpponentAnchor = document.getElementById("ctl00_bbCountdown_hlNextOpponent") as HTMLAnchorElement;
-const lineupSetCheck = document.getElementById("ctl00_bbCountdown_imgLineupIsSet");
+const nextOpponentAnchor = document.querySelector("a[id$=bbCountdown_hlNextOpponent]") as HTMLAnchorElement;
+const lineupSetCheck = document.querySelector("img[id$=bbCountdown_imgLineupIsSet]");
 
 if ( !! nextOpponentAnchor ) {
   addTeamLinks(nextOpponentAnchor, lineupSetCheck);
