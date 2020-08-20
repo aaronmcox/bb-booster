@@ -7,7 +7,7 @@ import {TransferListUpdate} from "./transfer-list-update";
 import {browser} from "webextension-polyfill-ts";
 
 function getFormData(): PresetInput[] {
-  const searchContainer: HTMLElement = document.getElementById("ctl00_cphContent_pnlTL");
+  const searchContainer: HTMLElement = document.querySelector("div[id$=cphContent_pnlTL]");
   const presetData: PresetInput[] = [];
   const inputs = searchContainer.getElementsByTagName("input");
   const selects = searchContainer.getElementsByTagName("select");
@@ -66,11 +66,11 @@ function loadSearchData(preset: Preset): void {
     return;
   }
 
-  const currentPresetSelect = document.getElementById("currentPresetSelect") as HTMLInputElement;
+  const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLInputElement;
   currentPresetSelect.value = preset.name;
 
   for (const input of preset.data) {
-    const inputElement = document.getElementById(input.id) as HTMLInputElement;
+    const inputElement = document.querySelector(`[id\$=${input.id}]`) as HTMLInputElement;
 
     if (!!input) {
       if (input.inputType === PresetInputType.CheckBox) {
@@ -86,9 +86,9 @@ function loadSearchData(preset: Preset): void {
 
 function toggleMinMaxDisabledState() {
   for(let i = 1; i <= 8; i++) {
-    const skillElement = document.getElementById(`ctl00_cphContent_ddlSkill${i}`) as HTMLSelectElement;
-    const skillMin = document.getElementById(`ctl00_cphContent_ddlSkill${i}Min`) as HTMLSelectElement;
-    const skillMax = document.getElementById(`ctl00_cphContent_ddlSkill${i}Max`) as HTMLSelectElement;
+    const skillElement = document.querySelector(`select[id$=cphContent_ddlSkill${i}]`) as HTMLSelectElement;
+    const skillMin = document.querySelector(`select[id$=cphContent_ddlSkill${i}Min]`) as HTMLSelectElement;
+    const skillMax = document.querySelector(`select[id$=cphContent_ddlSkill${i}Max]`) as HTMLSelectElement;
 
     if( !!skillElement.value && skillElement.value !== "0" ) {
       skillMin.disabled = false;
@@ -101,14 +101,14 @@ function toggleMinMaxDisabledState() {
 }
 
 const createControls = (searchNames) =>
-  <div id="transfer-search-container" className={["bbb-section", "bbb-lighter"]}>
+  <div id="bbb-transfer-search-container" className={["bbb-section", "bbb-lighter"]}>
     <table>
       <tr>
         <td className={["bbb-table-label"]}>
           <label>Presets:</label>
         </td>
         <td>
-          <select id="currentPresetSelect">
+          <select id="bbb-currentPresetSelect">
             {searchNames.map(name =>
                 <option value={name}>{name}</option>
             )}
@@ -117,7 +117,7 @@ const createControls = (searchNames) =>
         </td>
         <td>
           <input
-              id="topSearchButton"
+              id="bbb-topSearchButton"
               className={["button"]}
               type="button"
               value="Search"
@@ -125,7 +125,7 @@ const createControls = (searchNames) =>
         </td>
         <td>
           <input
-              id="deletePresetButton"
+              id="bbb-deletePresetButton"
               className={["button"]}
               type="button"
               value="Delete"/>
@@ -134,11 +134,11 @@ const createControls = (searchNames) =>
       <tr>
         <td className={["bbb-table-label"]}/>
         <td>
-          <input id="presetTextBox" type="text" placeholder="New Preset..." />
+          <input id="bbb-presetTextBox" type="text" placeholder="New Preset..." />
         </td>
         <td>
           <input
-              id="savePresetButton"
+              id="bbb-savePresetButton"
               className={["button"]}
               type="button"
               value="Save"/>
@@ -157,8 +157,8 @@ viewModel
 
       const controlsContainer = createControls(presetNames);
 
-      const searchPanel = document.getElementById("ctl00_cphContent_pnlTL");
-      const existingSearchContainer = document.getElementById("transfer-search-container");
+      const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
+      const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
 
       if (!!existingSearchContainer) {
         existingSearchContainer.remove();
@@ -166,20 +166,20 @@ viewModel
 
       searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
 
-      const presetTextBox = document.getElementById('presetTextBox') as HTMLInputElement;
-      const savePresetButton = document.getElementById("savePresetButton");
+      const presetTextBox = document.getElementById('bbb-presetTextBox') as HTMLInputElement;
+      const savePresetButton = document.getElementById("bbb-savePresetButton");
       savePresetButton.onclick = () => saveSearch(presetTextBox.value);
 
-      const currentPresetSelect = document.getElementById("currentPresetSelect") as HTMLSelectElement;
+      const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLSelectElement;
       currentPresetSelect.onchange = (ev: Event) => {
         viewModel.selectPreset((ev.target as HTMLSelectElement).value);
       };
 
-      const deleteButton = document.getElementById("deletePresetButton");
+      const deleteButton = document.getElementById("bbb-deletePresetButton");
       deleteButton.onclick = () => viewModel.deletePreset(currentPresetSelect.value);
 
-      const topSearchButton = document.getElementById("topSearchButton");
-      const bottomSearchButton = document.getElementById("ctl00_cphContent_btnSearch");
+      const topSearchButton = document.getElementById("bbb-topSearchButton");
+      const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
       topSearchButton.onclick = () => { bottomSearchButton.click(); };
     }
 
