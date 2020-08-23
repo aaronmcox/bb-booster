@@ -1,5 +1,5 @@
 
-import { el } from "../dom/jsx-runtime";
+import { el } from "../../dom/jsx-runtime";
 
 function createControls(teamId: string): HTMLElement {
   return (
