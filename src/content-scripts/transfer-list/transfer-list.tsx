@@ -5,57 +5,95 @@ import {PresetInput} from "../../preset-input";
 import {TransferListViewModel} from "./transfer-list-view-model";
 import {TransferListUpdate} from "./transfer-list-update";
 import {browser} from "webextension-polyfill-ts";
+import {TransferSearchParameters} from "./transfer-search-parameters";
+import {range} from "./range";
 
-const skill1 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill1]");
-const skill2 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill2]");
-const skill3 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill3]");
-const skill4 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill4]");
-const skill5 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill5]");
-const skill6 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill6]");
-const skill7 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill7]");
-const skill8 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill8]");
-const skill1Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill1Min]");
-const skill2Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill2Min]");
-const skill3Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill3Min]");
-const skill4Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill4Min]");
-const skill5Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill5Min]");
-const skill6Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill6Min]");
-const skill7Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill7Min]");
-const skill8Min = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill8Min]");
-const skill1Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill1Max]");
-const skill2Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill2Max]");
-const skill3Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill3Max]");
-const skill4Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill4Max]");
-const skill5Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill5Max]");
-const skill6Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill6Max]");
-const skill7Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill7Max]");
-const skill8Max = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlSkill8Max]");
-const ageMin = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMinAge]");
-const ageMax = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMaxAge]");
-const salaryMin = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMinSalary]");
-const salaryMax = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMaxSalary]");
-const currentBidMin = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMinCurrentBid]");
-const currentBidMax = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMaxCurrentBid]");
-const heightMin = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlHeightMin]");
-const heightMax = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlHeightMax]");
-const potentialMin = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlPotentialMin]");
-const potentialMax = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlPotentialMax]");
-const experienceMin = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlExperienceMin]");
-const experienceMax = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlExperienceMax]");
-const gameShapeMin = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlGameShapeMin]");
-const gameShapeMax = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlGameShapeMax]");
-const nationality = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlCountry]");
-const injury = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlInjury1]");
-const isOnNt = (): HTMLInputElement => document.querySelector("input[id$=cphContent_cbIsOnNT]");
-const guardSkillPointsMin = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbGuardSkillPoints]");
-const guardSkillPointsMax = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMaxGuardSkillPoints]");
-const bigMenSkillPointsMin = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbForwardSkillPoints]");
-const bigMenSkillPointsMax = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMaxForwardSkillPoints]");
-const totalSkillPointsMin = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbTotalSkillPoints]");
-const totalSkillPointsMax = (): HTMLInputElement => document.querySelector("input[id$=cphContent_tbMaxTotalSkillPoints]");
-const bestPosition1 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlBestposition]");
-const bestPosition2 = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlBestposition2]");
-const sortBy = (): HTMLSelectElement => document.querySelector("select[id$=cphContent_ddlsortBy]");
+const skill1 = "select[id$=cphContent_ddlSkill1]";
+const skill2 = "select[id$=cphContent_ddlSkill2]";
+const skill3 = "select[id$=cphContent_ddlSkill3]";
+const skill4 = "select[id$=cphContent_ddlSkill4]";
+const skill5 = "select[id$=cphContent_ddlSkill5]";
+const skill6 = "select[id$=cphContent_ddlSkill6]";
+const skill7 = "select[id$=cphContent_ddlSkill7]";
+const skill8 = "select[id$=cphContent_ddlSkill8]";
+const skill1Min = "select[id$=cphContent_ddlSkill1Min]";
+const skill2Min = "select[id$=cphContent_ddlSkill2Min]";
+const skill3Min = "select[id$=cphContent_ddlSkill3Min]";
+const skill4Min = "select[id$=cphContent_ddlSkill4Min]";
+const skill5Min = "select[id$=cphContent_ddlSkill5Min]";
+const skill6Min = "select[id$=cphContent_ddlSkill6Min]";
+const skill7Min = "select[id$=cphContent_ddlSkill7Min]";
+const skill8Min = "select[id$=cphContent_ddlSkill8Min]";
+const skill1Max = "select[id$=cphContent_ddlSkill1Max]";
+const skill2Max = "select[id$=cphContent_ddlSkill2Max]";
+const skill3Max = "select[id$=cphContent_ddlSkill3Max]";
+const skill4Max = "select[id$=cphContent_ddlSkill4Max]";
+const skill5Max = "select[id$=cphContent_ddlSkill5Max]";
+const skill6Max = "select[id$=cphContent_ddlSkill6Max]";
+const skill7Max = "select[id$=cphContent_ddlSkill7Max]";
+const skill8Max = "select[id$=cphContent_ddlSkill8Max]";
+const ageMin = "input[id$=cphContent_tbMinAge]";
+const ageMax = "input[id$=cphContent_tbMaxAge]";
+const salaryMin = "input[id$=cphContent_tbMinSalary]";
+const salaryMax = "input[id$=cphContent_tbMaxSalary]";
+const currentBidMin = "input[id$=cphContent_tbMinCurrentBid]";
+const currentBidMax = "input[id$=cphContent_tbMaxCurrentBid]";
+const heightMin = "select[id$=cphContent_ddlHeightMin]";
+const heightMax = "select[id$=cphContent_ddlHeightMax]";
+const potentialMin = "select[id$=cphContent_ddlPotentialMin]";
+const potentialMax = "select[id$=cphContent_ddlPotentialMax]";
+const experienceMin = "select[id$=cphContent_ddlExperienceMin]";
+const experienceMax = "select[id$=cphContent_ddlExperienceMax]";
+const gameShapeMin = "select[id$=cphContent_ddlGameShapeMin]";
+const gameShapeMax = "select[id$=cphContent_ddlGameShapeMax]";
+const nationality = "select[id$=cphContent_ddlCountry]";
+const injury = "select[id$=cphContent_ddlInjury1]";
+const isOnNt = "input[id$=cphContent_cbIsOnNT]";
+const guardSkillPointsMin = "input[id$=cphContent_tbGuardSkillPoints]";
+const guardSkillPointsMax = "input[id$=cphContent_tbMaxGuardSkillPoints]";
+const bigMenSkillPointsMin = "input[id$=cphContent_tbForwardSkillPoints]";
+const bigMenSkillPointsMax = "input[id$=cphContent_tbMaxForwardSkillPoints]";
+const totalSkillPointsMin = "input[id$=cphContent_tbTotalSkillPoints]";
+const totalSkillPointsMax = "input[id$=cphContent_tbMaxTotalSkillPoints]";
+const bestPosition1 = "select[id$=cphContent_ddlBestposition]";
+const bestPosition2 = "select[id$=cphContent_ddlBestposition2]";
+const sortBy = "select[id$=cphContent_ddlsortBy]";
+
+function select(selector: string): HTMLElement {
+  return document.querySelector(selector);
+}
+
+function selectInput(selector: string): HTMLInputElement {
+  return select(selector) as HTMLInputElement;
+}
+
+function selectSelect(selector: string): HTMLSelectElement {
+  return select(selector) as HTMLSelectElement;
+}
+
+
+function getFormData2(): TransferSearchParameters {
+  return {
+    age: range(selectInput(ageMin).value, selectInput(ageMax).value),
+    bestPosition1: selectSelect(bestPosition1).value ?? "",
+    bestPosition2: selectSelect(bestPosition2).value ?? "",
+    bigMenSkillPoints: range(selectInput(bigMenSkillPointsMin).value, selectInput(bigMenSkillPointsMax).value),
+    currentBid: undefined,
+    experience: undefined,
+    gameShape: undefined,
+    guardSkillPoints: undefined,
+    height: undefined,
+    injury: "",
+    isOnNT: false,
+    nationality: "",
+    potential: undefined,
+    salary: undefined,
+    skills: [],
+    sortBy: "",
+    totalSkillPoints: undefined
+  };
+}
+
 
 function getFormData(): PresetInput[] {
   const searchContainer: HTMLElement = document.querySelector("div[id$=cphContent_pnlTL]");
