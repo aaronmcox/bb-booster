@@ -7830,6 +7830,11 @@
       "integrity": "sha512-MbIXTWwAfJ9qET6Zl29UNwJcDJEEz9Zkr5oDhiujitJa7YBJwEpbkX2cmuklCDxubTMoRWpid3q8DrSyGnUUzQ==",
       "dev": true
     },
+    "preact": {
+      "version": "10.4.8",
+      "resolved": "https://registry.npmjs.org/preact/-/preact-10.4.8.tgz",
+      "integrity": "sha512-uVLeEAyRsCkUEFhVHlOu17OxcrwC7+hTGZ08kBoLBiGHiZooUZuibQnphgMKftw/rqYntNMyhVCPqQhcyAGHag=="
+    },
     "prelude-ls": {
       "version": "1.1.2",
       "resolved": "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.1.2.tgz",

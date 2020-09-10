@@ -84,8 +84,63 @@ function getChecked(selector: string): boolean {
     : false
 }
 
+function setFormData(params: TransferSearchParameters): void {
+  selectInput(ageMinSelector).value = params.age.minimum;
+  selectInput(ageMaxSelector).value = params.age.maximum;
+  selectInput(bestPosition1Selector).value = params.bestPosition1;
+  selectInput(bestPosition2Selector).value = params.bestPosition2;
+  selectInput(bigMenSkillPointsMinSelector).value = params.bigMenSkillPoints.minimum;
+  selectInput(bigMenSkillPointsMaxSelector).value = params.bigMenSkillPoints.maximum;
+  selectInput(currentBidMinSelector).value = params.currentBid.minimum;
+  selectInput(currentBidMaxSelector).value = params.currentBid.maximum;
+  selectInput(experienceMinSelector).value = params.currentBid.minimum;
+  selectInput(experienceMaxSelector).value = params.currentBid.maximum;
+  selectInput(gameShapeMinSelector).value = params.gameShape.minimum;
+  selectInput(gameShapeMaxSelector).value = params.gameShape.maximum;
+  selectInput(guardSkillPointsMinSelector).value = params.guardSkillPoints.minimum;
+  selectInput(guardSkillPointsMaxSelector).value = params.guardSkillPoints.maximum;
+  selectInput(heightMinSelector).value = params.height.minimum;
+  selectInput(heightMaxSelector).value = params.height.maximum;
+  selectInput(injurySelector).value = params.injury;
+  selectInput(isOnNtSelector).checked = params.isOnNT;
+  selectInput(nationalitySelector).value = params.nationality;
+  selectInput(potentialMinSelector).value = params.potential.minimum;
+  selectInput(potentialMaxSelector).value = params.potential.maximum;
+  selectInput(salaryMinSelector).value = params.salary.minimum;
+  selectInput(salaryMaxSelector).value = params.salary.maximum;
+  selectInput(sortBySelector).value = params.sortBy;
+  selectInput(totalSkillPointsMinSelector).value = params.totalSkillPoints.minimum;
+  selectInput(totalSkillPointsMaxSelector).value = params.totalSkillPoints.maximum;
 
-function getFormData2(): TransferSearchParameters {
+  //skills
+  selectInput(skill1Selector).value = params.skills[0].name;
+  selectInput(skill1MinSelector).value = params.skills[0].limits.minimum;
+  selectInput(skill1MaxSelector).value = params.skills[0].limits.maximum;
+  selectInput(skill2Selector).value = params.skills[1].name;
+  selectInput(skill2MinSelector).value = params.skills[1].limits.minimum;
+  selectInput(skill2MaxSelector).value = params.skills[1].limits.maximum;
+  selectInput(skill3Selector).value = params.skills[2].name;
+  selectInput(skill3MinSelector).value = params.skills[2].limits.minimum;
+  selectInput(skill3MaxSelector).value = params.skills[2].limits.maximum;
+  selectInput(skill4Selector).value = params.skills[3].name;
+  selectInput(skill4MinSelector).value = params.skills[3].limits.minimum;
+  selectInput(skill4MaxSelector).value = params.skills[3].limits.maximum;
+  selectInput(skill5Selector).value = params.skills[4].name;
+  selectInput(skill5MinSelector).value = params.skills[4].limits.minimum;
+  selectInput(skill5MaxSelector).value = params.skills[4].limits.maximum;
+  selectInput(skill6Selector).value = params.skills[5].name;
+  selectInput(skill6MinSelector).value = params.skills[5].limits.minimum;
+  selectInput(skill6MaxSelector).value = params.skills[5].limits.maximum;
+  selectInput(skill7Selector).value = params.skills[6].name;
+  selectInput(skill7MinSelector).value = params.skills[6].limits.minimum;
+  selectInput(skill7MaxSelector).value = params.skills[6].limits.maximum;
+  selectInput(skill8Selector).value = params.skills[7].name;
+  selectInput(skill8MinSelector).value = params.skills[7].limits.minimum;
+  selectInput(skill8MaxSelector).value = params.skills[7].limits.maximum;
+}
+
+
+function getFormData(): TransferSearchParameters {
   return {
     age: range(getValue(ageMinSelector), getValue(ageMaxSelector)),
     bestPosition1: getValue(bestPosition1Selector) ?? "",
@@ -101,13 +156,13 @@ function getFormData2(): TransferSearchParameters {
     nationality: getValue(nationalitySelector) ?? "",
     potential: range(getValue(potentialMinSelector), getValue(potentialMaxSelector)),
     salary: range(getValue(salaryMinSelector), getValue(salaryMaxSelector)),
-    skills: getSkills(),
+    skills: getSkillsData(),
     sortBy: getValue(sortBySelector),
     totalSkillPoints: range(getValue(totalSkillPointsMinSelector), getValue(totalSkillPointsMaxSelector))
   };
 }
 
-function getSkills(): Skill[] {
+function getSkillsData(): Skill[] {
   const skills: Skill[] = [];
 
   skills[0] = skill(getValue(skill1Selector), getValue(skill1MinSelector), getValue(skill1MaxSelector));
@@ -122,186 +177,141 @@ function getSkills(): Skill[] {
   return skills;
 }
 
-
-function getFormData(): PresetInput[] {
-  const searchContainer: HTMLElement = document.querySelector("div[id$=cphContent_pnlTL]");
-  const presetData: PresetInput[] = [];
-  const inputs = searchContainer.getElementsByTagName("input");
-  const selects = searchContainer.getElementsByTagName("select");
-
-  for (const input of inputs) {
-    if( !input.id || !Object.values(PresetInputType).includes(input.type as PresetInputType) ) {
-      continue;
-    }
-
-    const presetInput: PresetInput = {
-      id: input.id,
-      inputType: input.type as PresetInputType,
-      value: undefined
-    };
-
-    if (presetInput.inputType === PresetInputType.CheckBox) {
-      presetInput.value = input.checked;
-    } else {
-      presetInput.value = input.value;
-    }
-
-    presetData.push(presetInput);
-  }
-
-  for (const select of selects) {
-    if( !select.id ) {
-      // TODO: log?
-      continue;
-    }
-
-    const presetInput: PresetInput = {
-      id: select.id,
-      inputType: PresetInputType.Select,
-      value: select.value
-    };
-
-    presetData.push(presetInput);
-  }
-
-  return presetData;
-}
-
-
-function saveSearch(name: string): void {
-  const searchData: Preset = {
-    name,
-    data: getFormData()
-  };
-
-  viewModel.savePreset(searchData)
-}
-
-
-function loadSearchData(preset: Preset): void {
-  if( !preset ) {
-    return;
-  }
-
-  const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLInputElement;
-  currentPresetSelect.value = preset.name;
-
-  for (const input of preset.data) {
-    const inputElement = document.querySelector(`[id\$=${input.id}]`) as HTMLInputElement;
-
-    if (!!input) {
-      if (input.inputType === PresetInputType.CheckBox) {
-        inputElement.checked = input.value;
-      } else {
-        inputElement.value = input.value;
-      }
-    }
-  }
-
-  toggleMinMaxDisabledState();
-}
-
-function toggleMinMaxDisabledState() {
-  for(let i = 1; i <= 8; i++) {
-    const skillElement = document.querySelector(`select[id$=cphContent_ddlSkill${i}]`) as HTMLSelectElement;
-    const skillMin = document.querySelector(`select[id$=cphContent_ddlSkill${i}Min]`) as HTMLSelectElement;
-    const skillMax = document.querySelector(`select[id$=cphContent_ddlSkill${i}Max]`) as HTMLSelectElement;
-
-    if( !!skillElement.value && skillElement.value !== "0" ) {
-      skillMin.disabled = false;
-      skillMax.disabled = false;
-    } else {
-      skillMin.disabled = true;
-      skillMax.disabled = true;
-    }
-  }
-}
-
 const createControls = (searchNames) =>
-  <div id="bbb-transfer-search-container" className={["bbb-section", "bbb-lighter"]}>
-    <table>
-      <tr>
-        <td className={["bbb-table-label"]}>
-          <label>Presets:</label>
-        </td>
-        <td>
-          <select id="bbb-currentPresetSelect">
-            {searchNames.map(name =>
-                <option value={name}>{name}</option>
-            )}
-            <option value="" disabled selected>Load Preset...</option>
-          </select>
-        </td>
-        <td>
-          <input
-              id="bbb-topSearchButton"
-              className={["button"]}
-              type="button"
-              value="Search"
+    <div id="bbb-transfer-search-container" className={["bbb-section", "bbb-lighter"]}>
+      <table>
+        <tr>
+          <td className={["bbb-table-label"]}>
+            <label>Presets:</label>
+          </td>
+          <td>
+            <select id="bbb-currentPresetSelect">
+              {searchNames.map(name =>
+                  <option value={name}>{name}</option>
+              )}
+              <option value="" disabled selected>Load Preset...</option>
+            </select>
+          </td>
+          <td>
+            <input
+                id="bbb-topSearchButton"
+                className={["button"]}
+                type="button"
+                value="Search"
             />
-        </td>
-        <td>
-          <input
-              id="bbb-deletePresetButton"
-              className={["button"]}
-              type="button"
-              value="Delete"/>
-        </td>
-      </tr>
-      <tr>
-        <td className={["bbb-table-label"]}/>
-        <td>
-          <input id="bbb-presetTextBox" type="text" placeholder="New Preset..." />
-        </td>
-        <td>
-          <input
-              id="bbb-savePresetButton"
-              className={["button"]}
-              type="button"
-              value="Save"/>
-        </td>
-      </tr>
-    </table>
-  </div>;
+          </td>
+          <td>
+            <input
+                id="bbb-deletePresetButton"
+                className={["button"]}
+                type="button"
+                value="Delete"/>
+          </td>
+        </tr>
+        <tr>
+          <td className={["bbb-table-label"]}/>
+          <td>
+            <input id="bbb-presetTextBox" type="text" placeholder="New Preset..." />
+          </td>
+          <td>
+            <input
+                id="bbb-savePresetButton"
+                className={["button"]}
+                type="button"
+                value="Save"/>
+          </td>
+        </tr>
+      </table>
+    </div>;
 
-const viewModel = new TransferListViewModel(browser.storage.local);
-
-viewModel
-  .updates
-  .subscribe((update: TransferListUpdate) => {
-    if (update.presets.isUpdated) {
-      const presetNames = update.presets.payload.map(preset => preset.name);
-
-      const controlsContainer = createControls(presetNames);
-
-      const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
-      const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
-
-      if (!!existingSearchContainer) {
-        existingSearchContainer.remove();
-      }
-
-      searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
-
-      const presetTextBox = document.getElementById('bbb-presetTextBox') as HTMLInputElement;
-      const savePresetButton = document.getElementById("bbb-savePresetButton");
-      savePresetButton.onclick = () => saveSearch(presetTextBox.value);
-
-      const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLSelectElement;
-      currentPresetSelect.onchange = (ev: Event) => {
-        viewModel.selectPreset((ev.target as HTMLSelectElement).value);
-      };
-
-      const deleteButton = document.getElementById("bbb-deletePresetButton");
-      deleteButton.onclick = () => viewModel.deletePreset(currentPresetSelect.value);
-
-      const topSearchButton = document.getElementById("bbb-topSearchButton");
-      const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
-      topSearchButton.onclick = () => { bottomSearchButton.click(); };
-    }
-
-    if (update.selectedPreset.isUpdated) {
-      loadSearchData(update.selectedPreset.payload);
-    }
-
-  });
+// function saveSearch(name: string): void {
+//   const searchData: Preset = {
+//     name,
+//     data: getFormData()
+//   };
+//
+//   viewModel.savePreset(searchData)
+// }
+//
+//
+// function loadSearchData(preset: Preset): void {
+//   if( !preset ) {
+//     return;
+//   }
+//
+//   const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLInputElement;
+//   currentPresetSelect.value = preset.name;
+//
+//   for (const input of preset.data) {
+//     const inputElement = document.querySelector(`[id\$=${input.id}]`) as HTMLInputElement;
+//
+//     if (!!input) {
+//       if (input.inputType === PresetInputType.CheckBox) {
+//         inputElement.checked = input.value;
+//       } else {
+//         inputElement.value = input.value;
+//       }
+//     }
+//   }
+//
+//   toggleMinMaxDisabledState();
+// }
+//
+// function toggleMinMaxDisabledState() {
+//   for(let i = 1; i <= 8; i++) {
+//     const skillElement = document.querySelector(`select[id$=cphContent_ddlSkill${i}]`) as HTMLSelectElement;
+//     const skillMin = document.querySelector(`select[id$=cphContent_ddlSkill${i}Min]`) as HTMLSelectElement;
+//     const skillMax = document.querySelector(`select[id$=cphContent_ddlSkill${i}Max]`) as HTMLSelectElement;
+//
+//     if( !!skillElement.value && skillElement.value !== "0" ) {
+//       skillMin.disabled = false;
+//       skillMax.disabled = false;
+//     } else {
+//       skillMin.disabled = true;
+//       skillMax.disabled = true;
+//     }
+//   }
+// }
+//
+//
+// const viewModel = new TransferListViewModel(browser.storage.local);
+//
+// viewModel
+//   .updates
+//   .subscribe((update: TransferListUpdate) => {
+//     if (update.presets.isUpdated) {
+//       const presetNames = update.presets.payload.map(preset => preset.name);
+//
+//       const controlsContainer = createControls(presetNames);
+//
+//       const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
+//       const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
+//
+//       if (!!existingSearchContainer) {
+//         existingSearchContainer.remove();
+//       }
+//
+//       searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
+//
+//       const presetTextBox = document.getElementById('bbb-presetTextBox') as HTMLInputElement;
+//       const savePresetButton = document.getElementById("bbb-savePresetButton");
+//       savePresetButton.onclick = () => saveSearch(presetTextBox.value);
+//
+//       const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLSelectElement;
+//       currentPresetSelect.onchange = (ev: Event) => {
+//         viewModel.selectPreset((ev.target as HTMLSelectElement).value);
+//       };
+//
+//       const deleteButton = document.getElementById("bbb-deletePresetButton");
+//       deleteButton.onclick = () => viewModel.deletePreset(currentPresetSelect.value);
+//
+//       const topSearchButton = document.getElementById("bbb-topSearchButton");
+//       const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
+//       topSearchButton.onclick = () => { bottomSearchButton.click(); };
+//     }
+//
+//     if (update.selectedPreset.isUpdated) {
+//       loadSearchData(update.selectedPreset.payload);
+//     }
+//
+//   });
