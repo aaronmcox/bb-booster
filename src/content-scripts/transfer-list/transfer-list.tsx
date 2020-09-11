@@ -1,4 +1,6 @@
-import {el} from "../../dom/jsx-runtime";
+
+// import {el} from "../../dom/jsx-runtime";
+import { h, render, Component } from "preact";
 import {Preset} from "../../preset";
 import {PresetInputType} from "../../preset-input-type";
 import {PresetInput} from "../../preset-input";
@@ -8,6 +10,8 @@ import {browser} from "webextension-polyfill-ts";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {range} from "./range";
 import {skill, Skill} from "./skill";
+import {TransferListControlsProps} from "./transfer-list-controls-props";
+import {SelectData} from "../../common/select-data";
 
 const skill1Selector = "select[id$=cphContent_ddlSkill1]";
 const skill2Selector = "select[id$=cphContent_ddlSkill2]";
@@ -177,52 +181,88 @@ function getSkillsData(): Skill[] {
   return skills;
 }
 
-const createControls = (searchNames) =>
-    <div id="bbb-transfer-search-container" className={["bbb-section", "bbb-lighter"]}>
+class TransferListControlsComponent extends Component<TransferListControlsProps, SelectData> {
+  constructor() {
+    super();
+
+    this.state = {
+      selected: "",
+      options: []
+    };
+  }
+
+  componentDidMount() {
+  }
+
+  render(props: TransferListControlsProps, state: SelectData) {
+    return (<div id="bbb-transfer-search-container" class="bbb-section bbb-lighter">
       <table>
         <tr>
-          <td className={["bbb-table-label"]}>
+          <td class="bbb-table-label">
             <label>Presets:</label>
           </td>
           <td>
-            <select id="bbb-currentPresetSelect">
-              {searchNames.map(name =>
-                  <option value={name}>{name}</option>
+            <select id="bbb-currentPresetSelect" >
+              {state.options.map(name =>
+                <option value={name} selected={name === state.selected}>{name}</option>
               )}
-              <option value="" disabled selected>Load Preset...</option>
+              <option value="" disabled selected={state.selected === ""}>Load Preset...</option>
             </select>
           </td>
           <td>
             <input
-                id="bbb-topSearchButton"
-                className={["button"]}
-                type="button"
-                value="Search"
+              id="bbb-topSearchButton"
+              class="button"
+              type="button"
+              value="Search"
             />
           </td>
           <td>
             <input
-                id="bbb-deletePresetButton"
-                className={["button"]}
-                type="button"
-                value="Delete"/>
+              id="bbb-deletePresetButton"
+              class="button"
+              type="button"
+              value="Delete"/>
           </td>
         </tr>
         <tr>
-          <td className={["bbb-table-label"]}/>
+          <td class="bbb-table-label"/>
           <td>
             <input id="bbb-presetTextBox" type="text" placeholder="New Preset..." />
           </td>
           <td>
             <input
-                id="bbb-savePresetButton"
-                className={["button"]}
-                type="button"
-                value="Save"/>
+              id="bbb-savePresetButton"
+              class="button"
+              type="button"
+              value="Save"/>
           </td>
         </tr>
       </table>
-    </div>;
+    </div>)
+  };
+}
+
+const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
+
+let controlsContainer = document.getElementById("bbb-transfer-search-container");
+
+if( !controlsContainer ) {
+  controlsContainer = document.createElement("div" );
+  controlsContainer.id = "bbb-transfer-search-container";
+}
+
+render()
+
+
+//       const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
+//
+//       if (!!existingSearchContainer) {
+//         existingSearchContainer.remove();
+//       }
+//
+//       searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
+
 
 // function saveSearch(name: string): void {
 //   const searchData: Preset = {
