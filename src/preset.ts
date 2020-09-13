@@ -1,6 +1,5 @@
-import {PresetInput} from "./preset-input";
 
-export interface Preset {
+export interface Preset<T> {
     name: string,
-    data: PresetInput[]
+    parameters: T
 }

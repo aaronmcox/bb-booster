@@ -195,7 +195,7 @@ class TransferListControlsComponent extends Component<TransferListControlsProps,
   }
 
   render(props: TransferListControlsProps, state: SelectData) {
-    return (<div id="bbb-transfer-search-container" class="bbb-section bbb-lighter">
+    return (
       <table>
         <tr>
           <td class="bbb-table-label">
@@ -215,6 +215,7 @@ class TransferListControlsComponent extends Component<TransferListControlsProps,
               class="button"
               type="button"
               value="Search"
+              onClick={props.search}
             />
           </td>
           <td>
@@ -238,21 +239,31 @@ class TransferListControlsComponent extends Component<TransferListControlsProps,
               value="Save"/>
           </td>
         </tr>
-      </table>
-    </div>)
+      </table>);
   };
 }
 
 const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
+const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
 
 let controlsContainer = document.getElementById("bbb-transfer-search-container");
 
 if( !controlsContainer ) {
   controlsContainer = document.createElement("div" );
   controlsContainer.id = "bbb-transfer-search-container";
+  controlsContainer.className = "bbb-section bbb-lighter";
+
+  searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
 }
 
-render()
+render(
+  <TransferListControlsComponent
+    getSearchParamsFromDOM={getFormData}
+    loadSearchParamsIntoDOM={setFormData}
+    search={() => bottomSearchButton.click()}
+  />,
+  controlsContainer
+);
 
 
 //       const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
