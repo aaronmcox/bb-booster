@@ -1,6 +1,7 @@
 
 import {browser} from "webextension-polyfill-ts";
-import {Observable, BehaviorSubject} from "rxjs";
+import {Observable, BehaviorSubject, Subject} from "rxjs";
+import {take} from "rxjs/operators";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {Preset} from "../../preset";
 
@@ -20,10 +21,46 @@ export class SearchPresetManager {
     return this._presets;
   }
 
-  savePreset(preset: Preset<TransferSearchParameters>): void {
+  savePreset(preset: Preset<TransferSearchParameters>): Promise<[Preset<TransferSearchParameters>, Preset<TransferSearchParameters>[]]> {
+    const response = new Subject<[Preset<TransferSearchParameters>, Preset<TransferSearchParameters>[]]>();
+
+    this._presets
+      .pipe(take(1))
+      .subscribe((presets: Preset<TransferSearchParameters>[]) => {
+        const presetIndex = presets.findIndex(current => current.name === preset.name);
+
+        if( presetIndex === -1 ) {
+          presets.push(preset);
+        } else {
+          presets[presetIndex] = preset;
+        }
+
+        this._presets.next(presets);
+        response.next([preset, presets]);
+        response.complete();
+      });
+
+    return response;
   }
 
-  deletePreset(preset: Preset<TransferSearchParameters>): void {
+  deletePreset(preset: Preset<TransferSearchParameters>): Observable<Preset<TransferSearchParameters>[]> {
+    const response = new Subject<Preset<TransferSearchParameters>[]>();
+
+    this._presets
+      .pipe(take(1))
+      .subscribe((presets: Preset<TransferSearchParameters>[]) => {
+        const presetIndex = presets.findIndex(currentPreset => currentPreset.name === preset.name);
+
+        if( presetIndex !== -1 ) {
+          presets.splice(presetIndex, 1);
+          this._presets.next(presets);
+        }
+
+        response.next(presets);
+        response.complete();
+      });
+
+    return response;
   }
 
   private retrievePresets(): Promise<Preset<TransferSearchParameters>[]> {
@@ -35,4 +72,5 @@ export class SearchPresetManager {
         return [];
       })
   }
+
 }

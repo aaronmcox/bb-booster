@@ -1,17 +1,13 @@
 
 // import {el} from "../../dom/jsx-runtime";
 import { h, render, Component } from "preact";
-import {Preset} from "../../preset";
-import {PresetInputType} from "../../preset-input-type";
-import {PresetInput} from "../../preset-input";
-import {TransferListViewModel} from "./transfer-list-view-model";
-import {TransferListUpdate} from "./transfer-list-update";
 import {browser} from "webextension-polyfill-ts";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {range} from "./range";
 import {skill, Skill} from "./skill";
-import {TransferListControlsProps} from "./transfer-list-controls-props";
-import {SelectData} from "../../common/select-data";
+import {TransferListControlsComponent} from "./transfer-list-controls-component";
+import {SearchPresetManager} from "./search-preset-manager";
+
 
 const skill1Selector = "select[id$=cphContent_ddlSkill1]";
 const skill2Selector = "select[id$=cphContent_ddlSkill2]";
@@ -181,67 +177,6 @@ function getSkillsData(): Skill[] {
   return skills;
 }
 
-class TransferListControlsComponent extends Component<TransferListControlsProps, SelectData> {
-  constructor() {
-    super();
-
-    this.state = {
-      selected: "",
-      options: []
-    };
-  }
-
-  componentDidMount() {
-  }
-
-  render(props: TransferListControlsProps, state: SelectData) {
-    return (
-      <table>
-        <tr>
-          <td class="bbb-table-label">
-            <label>Presets:</label>
-          </td>
-          <td>
-            <select id="bbb-currentPresetSelect" >
-              {state.options.map(name =>
-                <option value={name} selected={name === state.selected}>{name}</option>
-              )}
-              <option value="" disabled selected={state.selected === ""}>Load Preset...</option>
-            </select>
-          </td>
-          <td>
-            <input
-              id="bbb-topSearchButton"
-              class="button"
-              type="button"
-              value="Search"
-              onClick={props.search}
-            />
-          </td>
-          <td>
-            <input
-              id="bbb-deletePresetButton"
-              class="button"
-              type="button"
-              value="Delete"/>
-          </td>
-        </tr>
-        <tr>
-          <td class="bbb-table-label"/>
-          <td>
-            <input id="bbb-presetTextBox" type="text" placeholder="New Preset..." />
-          </td>
-          <td>
-            <input
-              id="bbb-savePresetButton"
-              class="button"
-              type="button"
-              value="Save"/>
-          </td>
-        </tr>
-      </table>);
-  };
-}
 
 const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
 const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
@@ -255,6 +190,8 @@ if( !controlsContainer ) {
 
   searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
 }
+
+const presetManager = new SearchPresetManager(browser.storage.sync);
 
 render(
   <TransferListControlsComponent
