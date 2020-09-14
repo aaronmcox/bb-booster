@@ -1,12 +1,10 @@
 
-// import {el} from "../../dom/jsx-runtime";
-import { h, render, Component } from "preact";
 import {browser} from "webextension-polyfill-ts";
+import { h, render, Component } from "preact";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {range} from "./range";
 import {skill, Skill} from "./skill";
 import {TransferListControlsComponent} from "./transfer-list-controls-component";
-import {SearchPresetManager} from "./search-preset-manager";
 
 
 const skill1Selector = "select[id$=cphContent_ddlSkill1]";
@@ -191,8 +189,6 @@ if( !controlsContainer ) {
   searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
 }
 
-const presetManager = new SearchPresetManager(browser.storage.sync);
-
 render(
   <TransferListControlsComponent
     getSearchParamsFromDOM={getFormData}
@@ -201,15 +197,6 @@ render(
   />,
   controlsContainer
 );
-
-
-//       const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
-//
-//       if (!!existingSearchContainer) {
-//         existingSearchContainer.remove();
-//       }
-//
-//       searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
 
 
 // function saveSearch(name: string): void {

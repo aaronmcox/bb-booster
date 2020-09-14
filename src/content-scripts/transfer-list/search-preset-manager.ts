@@ -1,75 +1,67 @@
 
 import {browser} from "webextension-polyfill-ts";
-import {Observable, BehaviorSubject, Subject} from "rxjs";
-import {take} from "rxjs/operators";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {Preset} from "../../preset";
+import {PersistentStorage} from "../../persistent-storage";
 
-const presetsStorageName: string = "transfer-search-presets";
+export interface SavePresetResponse {
+  preset: Preset<TransferSearchParameters>,
+  presets: Preset<TransferSearchParameters>[],
+}
 
 export class SearchPresetManager {
-  private _presets: BehaviorSubject<Preset<TransferSearchParameters>[]> = new BehaviorSubject([]);
 
   constructor(
-    private _storage: browser.storage.StorageArea
-  ) {
-    this.retrievePresets()
-      .then(presets => { this._presets.next(presets)})
+    private _persistence: PersistentStorage
+  ) {}
+
+  getPresets(): Promise<Preset<TransferSearchParameters>[]> {
+    return this._persistence.getTransferSearchPresets();
   }
 
-  getPresets(): Observable<Preset<TransferSearchParameters>[]> {
-    return this._presets;
-  }
+  savePreset(preset: Preset<TransferSearchParameters>): Promise<SavePresetResponse> {
+    return this.getPresets()
+      .then(presets => {
+          const presetIndex = presets.findIndex(current => current.name === preset.name);
 
-  savePreset(preset: Preset<TransferSearchParameters>): Promise<[Preset<TransferSearchParameters>, Preset<TransferSearchParameters>[]]> {
-    const response = new Subject<[Preset<TransferSearchParameters>, Preset<TransferSearchParameters>[]]>();
+          if( presetIndex === -1 ) {
+            presets.push(preset);
+          } else {
+            presets[presetIndex] = preset;
+          }
 
-    this._presets
-      .pipe(take(1))
-      .subscribe((presets: Preset<TransferSearchParameters>[]) => {
-        const presetIndex = presets.findIndex(current => current.name === preset.name);
-
-        if( presetIndex === -1 ) {
-          presets.push(preset);
-        } else {
-          presets[presetIndex] = preset;
-        }
-
-        this._presets.next(presets);
-        response.next([preset, presets]);
-        response.complete();
+          return presets;
+        })
+      .then(presets => this._persistence.saveTransferSearchPresets(presets))
+      .then(presets => ({preset, presets}))
+      .catch(error => {
+        console.debug(error);
+        return Promise.reject(error);
       });
-
-    return response;
   }
 
-  deletePreset(preset: Preset<TransferSearchParameters>): Observable<Preset<TransferSearchParameters>[]> {
-    const response = new Subject<Preset<TransferSearchParameters>[]>();
-
-    this._presets
-      .pipe(take(1))
-      .subscribe((presets: Preset<TransferSearchParameters>[]) => {
+  deletePreset(preset: Preset<TransferSearchParameters>): Promise<Preset<TransferSearchParameters>[]> {
+    return this.getPresets()
+      .then((presets: Preset<TransferSearchParameters>[]) => {
         const presetIndex = presets.findIndex(currentPreset => currentPreset.name === preset.name);
 
         if( presetIndex !== -1 ) {
           presets.splice(presetIndex, 1);
-          this._presets.next(presets);
+          return [true, presets];
         }
 
-        response.next(presets);
-        response.complete();
-      });
+        return [false, presets];
+      })
+      .then(([shouldUpdate, presets]: [boolean, Preset<TransferSearchParameters>[]]) => {
+        if( !shouldUpdate ) {
+          return presets;
+        }
 
-    return response;
-  }
-
-  private retrievePresets(): Promise<Preset<TransferSearchParameters>[]> {
-    return this._storage.get(presetsStorageName)
-      .then(results => results[presetsStorageName] ?? [], error => { console.debug(error); return [];})
-      .then(presetObject => presetObject as Preset<TransferSearchParameters>[])
+        return this._persistence.saveTransferSearchPresets(presets);
+      })
       .catch(error => {
         console.debug(error);
-        return [];
+        return Promise.reject(error);
       })
   }
 
