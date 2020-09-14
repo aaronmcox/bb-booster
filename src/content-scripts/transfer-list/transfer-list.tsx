@@ -1,6 +1,6 @@
 
 import {browser} from "webextension-polyfill-ts";
-import { h, render, Component } from "preact";
+import { h, render } from "preact";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {range} from "./range";
 import {skill, Skill} from "./skill";
@@ -197,96 +197,3 @@ render(
   />,
   controlsContainer
 );
-
-
-// function saveSearch(name: string): void {
-//   const searchData: Preset = {
-//     name,
-//     data: getFormData()
-//   };
-//
-//   viewModel.savePreset(searchData)
-// }
-//
-//
-// function loadSearchData(preset: Preset): void {
-//   if( !preset ) {
-//     return;
-//   }
-//
-//   const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLInputElement;
-//   currentPresetSelect.value = preset.name;
-//
-//   for (const input of preset.data) {
-//     const inputElement = document.querySelector(`[id\$=${input.id}]`) as HTMLInputElement;
-//
-//     if (!!input) {
-//       if (input.inputType === PresetInputType.CheckBox) {
-//         inputElement.checked = input.value;
-//       } else {
-//         inputElement.value = input.value;
-//       }
-//     }
-//   }
-//
-//   toggleMinMaxDisabledState();
-// }
-//
-// function toggleMinMaxDisabledState() {
-//   for(let i = 1; i <= 8; i++) {
-//     const skillElement = document.querySelector(`select[id$=cphContent_ddlSkill${i}]`) as HTMLSelectElement;
-//     const skillMin = document.querySelector(`select[id$=cphContent_ddlSkill${i}Min]`) as HTMLSelectElement;
-//     const skillMax = document.querySelector(`select[id$=cphContent_ddlSkill${i}Max]`) as HTMLSelectElement;
-//
-//     if( !!skillElement.value && skillElement.value !== "0" ) {
-//       skillMin.disabled = false;
-//       skillMax.disabled = false;
-//     } else {
-//       skillMin.disabled = true;
-//       skillMax.disabled = true;
-//     }
-//   }
-// }
-//
-//
-// const viewModel = new TransferListViewModel(browser.storage.local);
-//
-// viewModel
-//   .updates
-//   .subscribe((update: TransferListUpdate) => {
-//     if (update.presets.isUpdated) {
-//       const presetNames = update.presets.payload.map(preset => preset.name);
-//
-//       const controlsContainer = createControls(presetNames);
-//
-//       const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
-//       const existingSearchContainer = document.getElementById("bbb-transfer-search-container");
-//
-//       if (!!existingSearchContainer) {
-//         existingSearchContainer.remove();
-//       }
-//
-//       searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
-//
-//       const presetTextBox = document.getElementById('bbb-presetTextBox') as HTMLInputElement;
-//       const savePresetButton = document.getElementById("bbb-savePresetButton");
-//       savePresetButton.onclick = () => saveSearch(presetTextBox.value);
-//
-//       const currentPresetSelect = document.getElementById("bbb-currentPresetSelect") as HTMLSelectElement;
-//       currentPresetSelect.onchange = (ev: Event) => {
-//         viewModel.selectPreset((ev.target as HTMLSelectElement).value);
-//       };
-//
-//       const deleteButton = document.getElementById("bbb-deletePresetButton");
-//       deleteButton.onclick = () => viewModel.deletePreset(currentPresetSelect.value);
-//
-//       const topSearchButton = document.getElementById("bbb-topSearchButton");
-//       const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
-//       topSearchButton.onclick = () => { bottomSearchButton.click(); };
-//     }
-//
-//     if (update.selectedPreset.isUpdated) {
-//       loadSearchData(update.selectedPreset.payload);
-//     }
-//
-//   });

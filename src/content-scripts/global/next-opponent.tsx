@@ -4,7 +4,7 @@ import {el} from "../../dom/jsx-runtime";
 
 const links = (teamId: string) => {
   return (
-    <div classNames={["bbb-section"]}>
+    <div className={["bbb-section"]}>
       <a href={`/team/${teamId}/schedule.aspx`}>Schedule</a>
       <br/>
       <a href={`/team/${teamId}/players.aspx`}>Roster</a>
