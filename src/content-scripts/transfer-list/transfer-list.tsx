@@ -6,6 +6,9 @@ import {range} from "./range";
 import {skill, Skill} from "./skill";
 import {TransferListControlsComponent} from "./transfer-list-controls-component";
 
+const skillSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}]`;
+const skillMinSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}Min]`;
+const skillMaxSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}Max]`;
 
 const skill1Selector = "select[id$=cphContent_ddlSkill1]";
 const skill2Selector = "select[id$=cphContent_ddlSkill2]";
@@ -91,8 +94,8 @@ function setFormData(params: TransferSearchParameters): void {
   selectInput(bigMenSkillPointsMaxSelector).value = params.bigMenSkillPoints.maximum;
   selectInput(currentBidMinSelector).value = params.currentBid.minimum;
   selectInput(currentBidMaxSelector).value = params.currentBid.maximum;
-  selectInput(experienceMinSelector).value = params.currentBid.minimum;
-  selectInput(experienceMaxSelector).value = params.currentBid.maximum;
+  selectInput(experienceMinSelector).value = params.experience.minimum;
+  selectInput(experienceMaxSelector).value = params.experience.maximum;
   selectInput(gameShapeMinSelector).value = params.gameShape.minimum;
   selectInput(gameShapeMaxSelector).value = params.gameShape.maximum;
   selectInput(guardSkillPointsMinSelector).value = params.guardSkillPoints.minimum;
@@ -135,6 +138,8 @@ function setFormData(params: TransferSearchParameters): void {
   selectInput(skill8Selector).value = params.skills[7].name;
   selectInput(skill8MinSelector).value = params.skills[7].limits.minimum;
   selectInput(skill8MaxSelector).value = params.skills[7].limits.maximum;
+
+  toggleMinMaxDisabledState();
 }
 
 
@@ -175,6 +180,21 @@ function getSkillsData(): Skill[] {
   return skills;
 }
 
+function toggleMinMaxDisabledState() {
+  for(let i = 1; i <= 8; i++) {
+    const skillElement = selectInput(skillSelector(i));
+    const skillMin = selectInput(skillMinSelector(i));
+    const skillMax = selectInput(skillMaxSelector(i));
+
+    if( !!skillElement.value && skillElement.value !== "0" ) {
+      skillMin.disabled = false;
+      skillMax.disabled = false;
+    } else {
+      skillMin.disabled = true;
+      skillMax.disabled = true;
+    }
+  }
+}
 
 const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
 const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;

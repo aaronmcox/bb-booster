@@ -36,6 +36,18 @@ export class TransferListControlsComponent extends Component<TransferListControl
   }
 
   onDeletePreset = (): void => {
+    if( !this.state.selectedPreset ) {
+      return;
+    }
+
+    this._presetManager.deletePreset(this.state.selectedPreset)
+      .then(updatedPresets => {
+        this.setState({
+          selectedPreset: undefined,
+          presets: updatedPresets
+        });
+      })
+      .catch(() => {});
   };
 
   onSavePreset = (): void => {
@@ -114,7 +126,12 @@ export class TransferListControlsComponent extends Component<TransferListControl
         <tr>
           <td class="bbb-table-label"/>
           <td>
-            <input id="bbb-presetTextBox" type="text" placeholder="New Preset..." onInput={this.onUpdateNewPresetName} />
+            <input id="bbb-presetTextBox"
+                   type="text"
+                   placeholder="New Preset..."
+                   value={state.newPresetName}
+                   onInput={this.onUpdateNewPresetName}
+            />
           </td>
           <td>
             <input
