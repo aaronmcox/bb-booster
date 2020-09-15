@@ -2,7 +2,7 @@
 import {browser} from "webextension-polyfill-ts";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {Preset} from "../../preset";
-import {PersistentStorage} from "../../persistent-storage";
+import {Persistence} from "../../persistence";
 
 export interface SavePresetResponse {
   preset: Preset<TransferSearchParameters>,
@@ -12,7 +12,7 @@ export interface SavePresetResponse {
 export class SearchPresetManager {
 
   constructor(
-    private _persistence: PersistentStorage
+    private _persistence: Persistence
   ) {}
 
   getPresets(): Promise<Preset<TransferSearchParameters>[]> {

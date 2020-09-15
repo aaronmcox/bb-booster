@@ -6,7 +6,7 @@ import {TransferListControlsState} from "./transfer-list-controls-state";
 import {Preset} from "../../preset";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {SearchPresetManager} from "./search-preset-manager";
-import {PersistentStorage} from "../../persistent-storage";
+import {Persistence} from "../../persistence";
 
 export class TransferListControlsComponent extends Component<TransferListControlsProps, TransferListControlsState> {
   private _presetManager: SearchPresetManager;
@@ -20,7 +20,7 @@ export class TransferListControlsComponent extends Component<TransferListControl
       selectedPreset: undefined
     };
 
-    this._presetManager = new SearchPresetManager(new PersistentStorage());
+    this._presetManager = new SearchPresetManager(new Persistence());
 
     this.onUpdateNewPresetName = this.onUpdateNewPresetName.bind(this);
     this.onSavePreset = this.onSavePreset.bind(this);
@@ -60,7 +60,10 @@ export class TransferListControlsComponent extends Component<TransferListControl
   onSelectPreset = e => {
     this.setState(oldState => ({
       selectedPreset: oldState.presets.find(preset => preset.name === e.target.value)
-    }));
+    }),
+    () => {
+      this.props.loadSearchParamsIntoDOM((this.state.selectedPreset.parameters))
+    });
   };
 
   onUpdateNewPresetName(e) {
@@ -70,9 +73,9 @@ export class TransferListControlsComponent extends Component<TransferListControl
   }
 
 
-  render(props, state) {
-    const selectedPresetName = !!this.state.selectedPreset
-      ? this.state.selectedPreset.name
+  render(props: TransferListControlsProps, state: TransferListControlsState) {
+    const selectedPresetName = !!state.selectedPreset
+      ? state.selectedPreset.name
       : "";
 
     return (
@@ -83,10 +86,10 @@ export class TransferListControlsComponent extends Component<TransferListControl
           </td>
           <td>
             <select id="bbb-currentPresetSelect" value={selectedPresetName} onChange={this.onSelectPreset} >
-              {this.state.presets.map(preset =>
-                <option value={preset.name} selected={preset.name === selectedPresetName}>{preset}</option>
+              {state.presets.map(preset =>
+                <option value={preset.name} >{preset.name}</option>
               )}
-              <option value="" disabled selected={selectedPresetName === ""}>Load Preset...</option>
+              <option value="" disabled>Load Preset...</option>
             </select>
           </td>
           <td>
@@ -95,7 +98,7 @@ export class TransferListControlsComponent extends Component<TransferListControl
               class="button"
               type="button"
               value="Search"
-              onClick={this.props.search}
+              onClick={props.search}
             />
           </td>
           <td>

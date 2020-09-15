@@ -5,7 +5,7 @@ import {TransferSearchParameters} from "./content-scripts/transfer-list/transfer
 
 const presetsStorageName: string = "transfer-search-presets";
 
-export class PersistentStorage {
+export class Persistence {
   private _storage: browser.storage.StorageArea;
 
   constructor() {
@@ -29,18 +29,20 @@ export class PersistentStorage {
     });
   }
 
-  private get<T>(key: string, valueOnError?: T | undefined): Promise<T> {
+  private get<T>(key: string, defaultValue?: T | undefined): Promise<T> {
     return this._storage.get(presetsStorageName)
       .then(getResults => getResults[key])
-      .then((item: Object) => item as T)
+      .then((json: string) => {
+        if( json !== undefined ) {
+          return JSON.parse(json) as T
+        }
+
+        return defaultValue;
+      })
       .catch(error => {
         console.debug(error);
 
-        if( valueOnError === undefined ) {
-          throw error;
-        }
-
-        return valueOnError;
+        return defaultValue;
       });
   }
 }
