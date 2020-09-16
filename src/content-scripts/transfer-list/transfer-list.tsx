@@ -9,31 +9,6 @@ import {TransferListControlsComponent} from "./transfer-list-controls-component"
 const skillSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}]`;
 const skillMinSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}Min]`;
 const skillMaxSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}Max]`;
-
-const skill1Selector = "select[id$=cphContent_ddlSkill1]";
-const skill2Selector = "select[id$=cphContent_ddlSkill2]";
-const skill3Selector = "select[id$=cphContent_ddlSkill3]";
-const skill4Selector = "select[id$=cphContent_ddlSkill4]";
-const skill5Selector = "select[id$=cphContent_ddlSkill5]";
-const skill6Selector = "select[id$=cphContent_ddlSkill6]";
-const skill7Selector = "select[id$=cphContent_ddlSkill7]";
-const skill8Selector = "select[id$=cphContent_ddlSkill8]";
-const skill1MinSelector = "select[id$=cphContent_ddlSkill1Min]";
-const skill2MinSelector = "select[id$=cphContent_ddlSkill2Min]";
-const skill3MinSelector = "select[id$=cphContent_ddlSkill3Min]";
-const skill4MinSelector = "select[id$=cphContent_ddlSkill4Min]";
-const skill5MinSelector = "select[id$=cphContent_ddlSkill5Min]";
-const skill6MinSelector = "select[id$=cphContent_ddlSkill6Min]";
-const skill7MinSelector = "select[id$=cphContent_ddlSkill7Min]";
-const skill8MinSelector = "select[id$=cphContent_ddlSkill8Min]";
-const skill1MaxSelector = "select[id$=cphContent_ddlSkill1Max]";
-const skill2MaxSelector = "select[id$=cphContent_ddlSkill2Max]";
-const skill3MaxSelector = "select[id$=cphContent_ddlSkill3Max]";
-const skill4MaxSelector = "select[id$=cphContent_ddlSkill4Max]";
-const skill5MaxSelector = "select[id$=cphContent_ddlSkill5Max]";
-const skill6MaxSelector = "select[id$=cphContent_ddlSkill6Max]";
-const skill7MaxSelector = "select[id$=cphContent_ddlSkill7Max]";
-const skill8MaxSelector = "select[id$=cphContent_ddlSkill8Max]";
 const ageMinSelector = "input[id$=cphContent_tbMinAge]";
 const ageMaxSelector = "input[id$=cphContent_tbMaxAge]";
 const salaryMinSelector = "input[id$=cphContent_tbMinSalary]";
@@ -114,30 +89,30 @@ function setFormData(params: TransferSearchParameters): void {
   selectInput(totalSkillPointsMaxSelector).value = params.totalSkillPoints.maximum;
 
   //skills
-  selectInput(skill1Selector).value = params.skills[0].name;
-  selectInput(skill1MinSelector).value = params.skills[0].limits.minimum;
-  selectInput(skill1MaxSelector).value = params.skills[0].limits.maximum;
-  selectInput(skill2Selector).value = params.skills[1].name;
-  selectInput(skill2MinSelector).value = params.skills[1].limits.minimum;
-  selectInput(skill2MaxSelector).value = params.skills[1].limits.maximum;
-  selectInput(skill3Selector).value = params.skills[2].name;
-  selectInput(skill3MinSelector).value = params.skills[2].limits.minimum;
-  selectInput(skill3MaxSelector).value = params.skills[2].limits.maximum;
-  selectInput(skill4Selector).value = params.skills[3].name;
-  selectInput(skill4MinSelector).value = params.skills[3].limits.minimum;
-  selectInput(skill4MaxSelector).value = params.skills[3].limits.maximum;
-  selectInput(skill5Selector).value = params.skills[4].name;
-  selectInput(skill5MinSelector).value = params.skills[4].limits.minimum;
-  selectInput(skill5MaxSelector).value = params.skills[4].limits.maximum;
-  selectInput(skill6Selector).value = params.skills[5].name;
-  selectInput(skill6MinSelector).value = params.skills[5].limits.minimum;
-  selectInput(skill6MaxSelector).value = params.skills[5].limits.maximum;
-  selectInput(skill7Selector).value = params.skills[6].name;
-  selectInput(skill7MinSelector).value = params.skills[6].limits.minimum;
-  selectInput(skill7MaxSelector).value = params.skills[6].limits.maximum;
-  selectInput(skill8Selector).value = params.skills[7].name;
-  selectInput(skill8MinSelector).value = params.skills[7].limits.minimum;
-  selectInput(skill8MaxSelector).value = params.skills[7].limits.maximum;
+  selectInput(skillSelector(1)).value = params.skills[0].name;
+  selectInput(skillMinSelector(1)).value = params.skills[0].limits.minimum;
+  selectInput(skillMaxSelector(1)).value = params.skills[0].limits.maximum;
+  selectInput(skillSelector(2)).value = params.skills[1].name;
+  selectInput(skillMinSelector(2)).value = params.skills[1].limits.minimum;
+  selectInput(skillMaxSelector(2)).value = params.skills[1].limits.maximum;
+  selectInput(skillSelector(3)).value = params.skills[2].name;
+  selectInput(skillMinSelector(3)).value = params.skills[2].limits.minimum;
+  selectInput(skillMaxSelector(3)).value = params.skills[2].limits.maximum;
+  selectInput(skillSelector(4)).value = params.skills[3].name;
+  selectInput(skillMinSelector(4)).value = params.skills[3].limits.minimum;
+  selectInput(skillMaxSelector(4)).value = params.skills[3].limits.maximum;
+  selectInput(skillSelector(5)).value = params.skills[4].name;
+  selectInput(skillMinSelector(5)).value = params.skills[4].limits.minimum;
+  selectInput(skillMaxSelector(5)).value = params.skills[4].limits.maximum;
+  selectInput(skillSelector(6)).value = params.skills[5].name;
+  selectInput(skillMinSelector(6)).value = params.skills[5].limits.minimum;
+  selectInput(skillMaxSelector(6)).value = params.skills[5].limits.maximum;
+  selectInput(skillSelector(7)).value = params.skills[6].name;
+  selectInput(skillMinSelector(7)).value = params.skills[6].limits.minimum;
+  selectInput(skillMaxSelector(7)).value = params.skills[6].limits.maximum;
+  selectInput(skillSelector(8)).value = params.skills[7].name;
+  selectInput(skillMinSelector(8)).value = params.skills[7].limits.minimum;
+  selectInput(skillMaxSelector(8)).value = params.skills[7].limits.maximum;
 
   toggleMinMaxDisabledState();
 }
@@ -168,14 +143,14 @@ function getFormData(): TransferSearchParameters {
 function getSkillsData(): Skill[] {
   const skills: Skill[] = [];
 
-  skills[0] = skill(getValue(skill1Selector), getValue(skill1MinSelector), getValue(skill1MaxSelector));
-  skills[1] = skill(getValue(skill2Selector), getValue(skill2MinSelector), getValue(skill2MaxSelector));
-  skills[2] = skill(getValue(skill3Selector), getValue(skill3MinSelector), getValue(skill3MaxSelector));
-  skills[3] = skill(getValue(skill4Selector), getValue(skill4MinSelector), getValue(skill4MaxSelector));
-  skills[4] = skill(getValue(skill5Selector), getValue(skill5MinSelector), getValue(skill5MaxSelector));
-  skills[5] = skill(getValue(skill6Selector), getValue(skill6MinSelector), getValue(skill6MaxSelector));
-  skills[6] = skill(getValue(skill7Selector), getValue(skill7MinSelector), getValue(skill7MaxSelector));
-  skills[7] = skill(getValue(skill8Selector), getValue(skill8MinSelector), getValue(skill8MaxSelector));
+  skills[0] = skill(getValue(skillSelector(1)), getValue(skillMinSelector(1)), getValue(skillMaxSelector(1)));
+  skills[1] = skill(getValue(skillSelector(2)), getValue(skillMinSelector(2)), getValue(skillMaxSelector(2)));
+  skills[2] = skill(getValue(skillSelector(3)), getValue(skillMinSelector(3)), getValue(skillMaxSelector(3)));
+  skills[3] = skill(getValue(skillSelector(4)), getValue(skillMinSelector(4)), getValue(skillMaxSelector(4)));
+  skills[4] = skill(getValue(skillSelector(5)), getValue(skillMinSelector(5)), getValue(skillMaxSelector(5)));
+  skills[5] = skill(getValue(skillSelector(6)), getValue(skillMinSelector(6)), getValue(skillMaxSelector(6)));
+  skills[6] = skill(getValue(skillSelector(7)), getValue(skillMinSelector(7)), getValue(skillMaxSelector(7)));
+  skills[7] = skill(getValue(skillSelector(8)), getValue(skillMinSelector(8)), getValue(skillMaxSelector(8)));
 
   return skills;
 }

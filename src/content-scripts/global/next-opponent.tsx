@@ -4,7 +4,7 @@ import {el} from "../../dom/jsx-runtime";
 
 const links = (teamId: string) => {
   return (
-    <div className={["bbb-section"]}>
+    <div id="bbb-next-opponent-links" className={["bbb-section"]}>
       <a href={`/team/${teamId}/schedule.aspx`}>Schedule</a>
       <br/>
       <a href={`/team/${teamId}/players.aspx`}>Roster</a>
@@ -24,6 +24,12 @@ function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: Ele
   const teamId = matches[0][1];
 
   const priorElement = lineupSetCheck ?? nextOpponentAnchor;
+
+  const linksContainer = document.getElementById("bbb-next-opponent-links");
+
+  if( !!linksContainer ) {
+    linksContainer.remove();
+  }
 
   priorElement.insertAdjacentElement("afterend", links(teamId));
 }
