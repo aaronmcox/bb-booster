@@ -7,25 +7,32 @@ import {Preset} from "../../preset";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {SearchPresetManager} from "./search-preset-manager";
 import {Persistence} from "../../persistence";
+import {range} from "./range";
 
 export class TransferListControlsComponent extends Component<TransferListControlsProps, TransferListControlsState> {
-  private _presetManager: SearchPresetManager;
+  private readonly _presetManager: SearchPresetManager;
+  private readonly _initialMaxSalary: string;
+  private readonly _initialMaxCurrentBid: string;
 
-  constructor(props) {
+  constructor(props: TransferListControlsProps) {
     super(props);
 
     this.state = {
       newPresetName: "",
       presets: [],
-      selectedPreset: undefined
+      selectedPreset: undefined,
+      useStoredMaxLimits: false
     };
 
     this._presetManager = new SearchPresetManager(new Persistence());
+    this._initialMaxSalary = props.initialMaxSalary;
+    this._initialMaxCurrentBid = props.initialMaxCurrentBid;
 
     this.onDeletePreset = this.onDeletePreset.bind(this);
     this.onUpdateNewPresetName = this.onUpdateNewPresetName.bind(this);
     this.onSavePreset = this.onSavePreset.bind(this);
     this.onSelectPreset = this.onSelectPreset.bind(this);
+    this.onToggleUseStoredMaxLimits = this.onToggleUseStoredMaxLimits.bind(this);
   }
 
 
@@ -77,7 +84,9 @@ export class TransferListControlsComponent extends Component<TransferListControl
       selectedPreset: oldState.presets.find(preset => preset.name === e.target.value)
     }),
     () => {
-      this.props.loadSearchParamsIntoDOM((this.state.selectedPreset.parameters))
+      if( !!this.state.selectedPreset ) {
+        this.props.loadSearchParamsIntoDOM(this.generateSearchParams());
+      }
     });
   }
 
@@ -87,6 +96,29 @@ export class TransferListControlsComponent extends Component<TransferListControl
     }));
   }
 
+  onToggleUseStoredMaxLimits(ev) {
+    this.setState({
+      useStoredMaxLimits: ev.target.checked
+    }, () => {
+      if( !!this.state.selectedPreset ) {
+        this.props.loadSearchParamsIntoDOM(this.generateSearchParams());
+      }
+    });
+  }
+
+  generateSearchParams() {
+    const searchParams = this.state.selectedPreset.parameters;
+
+    if (this.state.useStoredMaxLimits) {
+      return searchParams;
+    }
+
+    return {
+      ...searchParams,
+      salary: range(searchParams.salary.minimum, this._initialMaxSalary),
+      currentBid: range(searchParams.currentBid.minimum, this._initialMaxCurrentBid)
+    };
+  }
 
   render(props: TransferListControlsProps, state: TransferListControlsState) {
     const selectedPresetName = !!state.selectedPreset
@@ -144,6 +176,16 @@ export class TransferListControlsComponent extends Component<TransferListControl
               value="Save"
               onClick={this.onSavePreset}
             />
+          </td>
+        </tr>
+        <tr>
+          <td/>
+          <td colSpan={2}>
+            <input type="checkbox"
+                   onInput={this.onToggleUseStoredMaxLimits}
+                   checked={state.useStoredMaxLimits}
+            />
+            <label>Use stored max salary and max current bid?</label>
           </td>
         </tr>
       </table>);

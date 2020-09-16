@@ -4,5 +4,6 @@ import {TransferSearchParameters} from "./transfer-search-parameters";
 export interface TransferListControlsState {
   presets: Preset<TransferSearchParameters>[],
   newPresetName: string,
-  selectedPreset: Preset<TransferSearchParameters>
+  selectedPreset: Preset<TransferSearchParameters>,
+  useStoredMaxLimits: boolean
 }
