@@ -174,6 +174,7 @@ function toggleMinMaxDisabledState() {
 const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
 const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
 
+const initialSearchParams = getFormData();
 let controlsContainer = document.getElementById("bbb-transfer-search-container");
 
 if( !controlsContainer ) {
@@ -189,6 +190,8 @@ render(
     getSearchParamsFromDOM={getFormData}
     loadSearchParamsIntoDOM={setFormData}
     search={() => bottomSearchButton.click()}
+    initialMaxCurrentBid={initialSearchParams.currentBid.maximum}
+    initialMaxSalary={initialSearchParams.salary.maximum}
   />,
   controlsContainer
 );
