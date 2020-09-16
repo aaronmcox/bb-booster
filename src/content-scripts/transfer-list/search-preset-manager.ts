@@ -1,13 +1,7 @@
-
-import {browser} from "webextension-polyfill-ts";
 import {TransferSearchParameters} from "./transfer-search-parameters";
 import {Preset} from "../../preset";
 import {Persistence} from "../../persistence";
-
-export interface SavePresetResponse {
-  preset: Preset<TransferSearchParameters>,
-  presets: Preset<TransferSearchParameters>[],
-}
+import {SavePresetMessage} from "./save-preset-message";
 
 export class SearchPresetManager {
 
@@ -19,7 +13,7 @@ export class SearchPresetManager {
     return this._persistence.getTransferSearchPresets();
   }
 
-  savePreset(preset: Preset<TransferSearchParameters>): Promise<SavePresetResponse> {
+  savePreset(preset: Preset<TransferSearchParameters>): Promise<SavePresetMessage> {
     return this.getPresets()
       .then(presets => {
           const presetIndex = presets.findIndex(current => current.name === preset.name);
