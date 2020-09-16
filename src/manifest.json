@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "name": "BB Booster",
   "author": "Aaron Cox",
   "description": "Provides a few display and usability enhancements for the BuzzerBeater basketball management simulation game.",

@@ -9,7 +9,7 @@
     "build": "parcel build src/manifest.json",
     "serve": "web-ext --source-dir ./dist run",
     "publish": "./publish.sh",
-    "clean": "rm -fr ./dist ./publish"
+    "clean": "rm -fr ./dist ./publish ./.cache"
   },
   "author": "Aaron Cox",
   "license": "BSD-3-Clause",
@@ -21,7 +21,7 @@
     "web-ext": "^5.0.0",
     "web-ext-types": "^3.2.1",
     "webextension-polyfill": "^0.6.0",
-    "webextension-polyfill-ts": "^0.19.0"
+    "webextension-polyfill-ts": "^0.20.0"
   },
   "dependencies": {
     "preact": "^10.4.8",

@@ -22,9 +22,12 @@ export class TransferListControlsComponent extends Component<TransferListControl
 
     this._presetManager = new SearchPresetManager(new Persistence());
 
+    this.onDeletePreset = this.onDeletePreset.bind(this);
     this.onUpdateNewPresetName = this.onUpdateNewPresetName.bind(this);
     this.onSavePreset = this.onSavePreset.bind(this);
+    this.onSelectPreset = this.onSelectPreset.bind(this);
   }
+
 
   componentDidMount() {
     this._presetManager.getPresets()
@@ -35,7 +38,7 @@ export class TransferListControlsComponent extends Component<TransferListControl
       });
   }
 
-  onDeletePreset = (): void => {
+  onDeletePreset()  {
     if( !this.state.selectedPreset ) {
       return;
     }
@@ -48,9 +51,9 @@ export class TransferListControlsComponent extends Component<TransferListControl
         });
       })
       .catch(() => {});
-  };
+  }
 
-  onSavePreset = (): void => {
+  onSavePreset() {
     const newPresetName = this.state.newPresetName;
     const searchParams = this.props.getSearchParamsFromDOM();
 
@@ -67,16 +70,16 @@ export class TransferListControlsComponent extends Component<TransferListControl
           presets
         });
       }).catch(() => {});
-  };
+  }
 
-  onSelectPreset = e => {
+  onSelectPreset(e) {
     this.setState(oldState => ({
       selectedPreset: oldState.presets.find(preset => preset.name === e.target.value)
     }),
     () => {
       this.props.loadSearchParamsIntoDOM((this.state.selectedPreset.parameters))
     });
-  };
+  }
 
   onUpdateNewPresetName(e) {
     this.setState(prevState => Object.assign(prevState, {
@@ -101,7 +104,7 @@ export class TransferListControlsComponent extends Component<TransferListControl
               {state.presets.map(preset =>
                 <option value={preset.name} >{preset.name}</option>
               )}
-              <option value="" disabled>Load Preset...</option>
+              <option value="" selected disabled>Load Preset...</option>
             </select>
           </td>
           <td>
@@ -144,5 +147,5 @@ export class TransferListControlsComponent extends Component<TransferListControl
           </td>
         </tr>
       </table>);
-  };
+  }
 }
