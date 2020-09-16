@@ -1,5 +1,5 @@
 {
-  "name": "buzzer-beater-booster",
+  "name": "bb-booster",
   "version": "0.0.0",
   "lockfileVersion": 1,
   "requires": true,
@@ -1971,9 +1971,9 @@
       }
     },
     "bl": {
-      "version": "1.2.2",
-      "resolved": "https://registry.npmjs.org/bl/-/bl-1.2.2.tgz",
-      "integrity": "sha512-e8tQYnZodmebYDWGH7KMRvtzKXaJHx3BbilrgZCfvyLUYdKpK1t5PSPmpkny/SgiTSCnjfLW7v5rlONXVFkQEA==",
+      "version": "1.2.3",
+      "resolved": "https://registry.npmjs.org/bl/-/bl-1.2.3.tgz",
+      "integrity": "sha512-pvcNpa0UU69UT341rO6AYy4FVAIkUHuZXRIWbq+zHnsVcRzDDjIAhGuuYoi0d//cwIwtt4pkpKycWEfjdV+vww==",
       "dev": true,
       "requires": {
         "readable-stream": "^2.3.5",
@@ -7830,6 +7830,11 @@
       "integrity": "sha512-MbIXTWwAfJ9qET6Zl29UNwJcDJEEz9Zkr5oDhiujitJa7YBJwEpbkX2cmuklCDxubTMoRWpid3q8DrSyGnUUzQ==",
       "dev": true
     },
+    "preact": {
+      "version": "10.4.8",
+      "resolved": "https://registry.npmjs.org/preact/-/preact-10.4.8.tgz",
+      "integrity": "sha512-uVLeEAyRsCkUEFhVHlOu17OxcrwC7+hTGZ08kBoLBiGHiZooUZuibQnphgMKftw/rqYntNMyhVCPqQhcyAGHag=="
+    },
     "prelude-ls": {
       "version": "1.1.2",
       "resolved": "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.1.2.tgz",
@@ -8332,21 +8337,6 @@
       "requires": {
         "hash-base": "^3.0.0",
         "inherits": "^2.0.1"
-      }
-    },
-    "rxjs": {
-      "version": "6.6.2",
-      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-6.6.2.tgz",
-      "integrity": "sha512-BHdBMVoWC2sL26w//BCu3YzKT4s2jip/WhwsGEDmeKYBhKDZeYezVUnHatYB7L85v5xs0BAQmg6BEYJEKxBabg==",
-      "requires": {
-        "tslib": "^1.9.0"
-      },
-      "dependencies": {
-        "tslib": {
-          "version": "1.13.0",
-          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.13.0.tgz",
-          "integrity": "sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q=="
-        }
       }
     },
     "safe-buffer": {

@@ -1,15 +1,16 @@
 
-import { el } from "../dom/jsx-runtime";
+/** @jsx el */
+import {el} from "../../dom/jsx-runtime";
 
-function createControls(teamId: string): HTMLElement {
+const links = (teamId: string) => {
   return (
-    <div className={["bbb-section"]}>
+    <div id="bbb-next-opponent-links" className={["bbb-section"]}>
       <a href={`/team/${teamId}/schedule.aspx`}>Schedule</a>
       <br/>
       <a href={`/team/${teamId}/players.aspx`}>Roster</a>
     </div>
   );
-}
+};
 
 function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: Element | undefined): void {
   const teamIdRegex = /.*team\/([0-9]+).*/g;
@@ -22,11 +23,15 @@ function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: Ele
 
   const teamId = matches[0][1];
 
-  const links = createControls(teamId);
-
   const priorElement = lineupSetCheck ?? nextOpponentAnchor;
 
-  priorElement.insertAdjacentElement("afterend", links);
+  const linksContainer = document.getElementById("bbb-next-opponent-links");
+
+  if( !!linksContainer ) {
+    linksContainer.remove();
+  }
+
+  priorElement.insertAdjacentElement("afterend", links(teamId));
 }
 
 const nextOpponentAnchor = document.querySelector("a[id$=bbCountdown_hlNextOpponent]") as HTMLAnchorElement;

@@ -8,13 +8,13 @@
   "content_scripts": [
     {
       "matches": ["*://*.buzzerbeater.com/manage/transferlist.aspx"],
-      "js": ["transferlist/transferlist.tsx"],
+      "js": ["content-scripts/transfer-list/transfer-list.tsx"],
       "css": ["bbb.scss"]
     },
     {
       "matches": ["*://*.buzzerbeater.com/*"],
       "js": [
-        "next-opponent/next-opponent.tsx"
+        "content-scripts/global/next-opponent.tsx"
       ],
       "css": ["bbb.scss"]
     }
