@@ -8,6 +8,8 @@ const links = (teamId: string) => {
       <a href={`/team/${teamId}/schedule.aspx`}>Schedule</a>
       <br/>
       <a href={`/team/${teamId}/players.aspx`}>Roster</a>
+      <br/>
+      <a href={`/team/${teamId}/stats.aspx`}>Stats</a>
     </div>
   );
 };
