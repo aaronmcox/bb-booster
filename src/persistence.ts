@@ -2,8 +2,10 @@
 import {browser} from "webextension-polyfill-ts";
 import {Preset} from "./preset";
 import {TransferSearchParameters} from "./content-scripts/transfer-list/transfer-search-parameters";
+import {defaultFeatures, Features} from "./features";
 
 const presetsStorageName: string = "transfer-search-presets";
+const featuresStorageName: string = "features";
 
 export class Persistence {
   private _storage: browser.storage.StorageArea;
@@ -16,9 +18,18 @@ export class Persistence {
     return this.get<Preset<TransferSearchParameters>[]>(presetsStorageName, []);
   }
 
-  saveTransferSearchPresets(presets: Preset<TransferSearchParameters>[]): Promise<Preset<TransferSearchParameters>[]> {
+  setTransferSearchPresets(presets: Preset<TransferSearchParameters>[]): Promise<Preset<TransferSearchParameters>[]> {
     return this.set(presetsStorageName, presets)
       .then(() => this.getTransferSearchPresets());
+  }
+
+  getFeatures(): Promise<Features> {
+    return this.get<Features>(featuresStorageName, defaultFeatures);
+  }
+
+  setFeatures(features: Features): Promise<Features> {
+    return this.set(featuresStorageName, features)
+      .then(() => this.getFeatures());
   }
 
   private set<T>(key: string, serializable: T): Promise<void> {
