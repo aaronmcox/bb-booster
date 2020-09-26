@@ -5,6 +5,13 @@
   "author": "Aaron Cox",
   "description": "Provides a few display and usability enhancements for the BuzzerBeater basketball management simulation game.",
   "homepage_url": "https://github.com/aaronmcox/bb-booster",
+
+  "options_ui": {
+    "page": "options/options.html",
+    "browser_style": true,
+    "chrome_style": true
+  },
+
   "content_scripts": [
     {
       "matches": ["*://*.buzzerbeater.com/manage/transferlist.aspx"],

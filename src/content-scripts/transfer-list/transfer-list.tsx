@@ -5,6 +5,8 @@ import {TransferSearchParameters} from "./transfer-search-parameters";
 import {range} from "./range";
 import {skill, Skill} from "./skill";
 import {TransferListControlsComponent} from "./transfer-list-controls-component";
+import {Persistence} from "../../persistence";
+import {Features} from "../../features";
 
 const skillSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}]`;
 const skillMinSelector = skillNo => `select[id\$=cphContent_ddlSkill${skillNo}Min]`;
@@ -171,27 +173,35 @@ function toggleMinMaxDisabledState() {
   }
 }
 
-const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
-const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
+const persistence = new Persistence();
 
-const initialSearchParams = getFormData();
-let controlsContainer = document.getElementById("bbb-transfer-search-container");
+persistence.getFeatures()
+  .then((features: Features) => {
+    if( features.transferListPresets ) {
+      const searchPanel = document.querySelector("div[id$=cphContent_pnlTL]");
+      const bottomSearchButton = document.querySelector("input[id$=cphContent_btnSearch]") as HTMLElement;
 
-if( !controlsContainer ) {
-  controlsContainer = document.createElement("div" );
-  controlsContainer.id = "bbb-transfer-search-container";
-  controlsContainer.className = "bbb-section bbb-lighter";
+      const initialSearchParams = getFormData();
+      let controlsContainer = document.getElementById("bbb-transfer-search-container");
 
-  searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
-}
+      if( !controlsContainer ) {
+        controlsContainer = document.createElement("div" );
+        controlsContainer.id = "bbb-transfer-search-container";
+        controlsContainer.className = "bbb-section bbb-lighter";
 
-render(
-  <TransferListControlsComponent
-    getSearchParamsFromDOM={getFormData}
-    loadSearchParamsIntoDOM={setFormData}
-    search={() => bottomSearchButton.click()}
-    initialMaxCurrentBid={initialSearchParams.currentBid.maximum}
-    initialMaxSalary={initialSearchParams.salary.maximum}
-  />,
-  controlsContainer
-);
+        searchPanel.insertAdjacentElement("beforebegin", controlsContainer);
+      }
+
+      render(
+        <TransferListControlsComponent
+          getSearchParamsFromDOM={getFormData}
+          loadSearchParamsIntoDOM={setFormData}
+          search={() => bottomSearchButton.click()}
+          initialMaxCurrentBid={initialSearchParams.currentBid.maximum}
+          initialMaxSalary={initialSearchParams.salary.maximum}
+        />,
+        controlsContainer
+      );
+    }
+  });
+

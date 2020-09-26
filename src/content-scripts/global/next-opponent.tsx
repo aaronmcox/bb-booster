@@ -1,6 +1,8 @@
 
 /** @jsx el */
 import {el} from "../../dom/jsx-runtime";
+import {Persistence} from "../../persistence";
+import {Features} from "../../features";
 
 const links = (teamId: string) => {
   return (
@@ -36,9 +38,18 @@ function addTeamLinks(nextOpponentAnchor: HTMLAnchorElement, lineupSetCheck: Ele
   priorElement.insertAdjacentElement("afterend", links(teamId));
 }
 
-const nextOpponentAnchor = document.querySelector("a[id$=bbCountdown_hlNextOpponent]") as HTMLAnchorElement;
-const lineupSetCheck = document.querySelector("img[id$=bbCountdown_imgLineupIsSet]");
+const persistence = new Persistence();
 
-if ( !! nextOpponentAnchor ) {
-  addTeamLinks(nextOpponentAnchor, lineupSetCheck);
-}
+persistence.getFeatures()
+  .then((features: Features) => {
+    if( features.nextOpponentLinks ) {
+      const nextOpponentAnchor = document.querySelector("a[id$=bbCountdown_hlNextOpponent]") as HTMLAnchorElement;
+      const lineupSetCheck = document.querySelector("img[id$=bbCountdown_imgLineupIsSet]");
+
+      if ( !! nextOpponentAnchor ) {
+        addTeamLinks(nextOpponentAnchor, lineupSetCheck);
+      }
+    }
+  });
+
+

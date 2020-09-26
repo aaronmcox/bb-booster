@@ -26,7 +26,7 @@ export class SearchPresetManager {
 
           return presets;
         })
-      .then(presets => this._persistence.saveTransferSearchPresets(presets))
+      .then(presets => this._persistence.setTransferSearchPresets(presets))
       .then(presets => ({preset, presets}))
       .catch(error => {
         console.debug(error);
@@ -51,7 +51,7 @@ export class SearchPresetManager {
           return presets;
         }
 
-        return this._persistence.saveTransferSearchPresets(presets);
+        return this._persistence.setTransferSearchPresets(presets);
       })
       .catch(error => {
         console.debug(error);
