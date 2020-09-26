@@ -41,7 +41,7 @@ export class Persistence {
   }
 
   private get<T>(key: string, defaultValue?: T | undefined): Promise<T> {
-    return this._storage.get(presetsStorageName)
+    return this._storage.get(key)
       .then(getResults => getResults[key])
       .then((json: string) => {
         if( json !== undefined ) {

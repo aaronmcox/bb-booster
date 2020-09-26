@@ -25,11 +25,11 @@ const Features = ({ features, updateFeatures }: FeaturesProps) => (
     </div>
     <div>
       <input type="checkbox"
-             id="cb-next-opponent"
+             id="cb-transfer-list-presets"
              checked={features.transferListPresets}
              onInput={ev => {updateFeatures({...features, transferListPresets: (ev.target as HTMLInputElement).checked});}}
       />
-      <label for="cb-next-opponent">Transfer list presets?</label>
+      <label for="cb-transfer-list-presets">Transfer list presets?</label>
     </div>
   </div>
 );
