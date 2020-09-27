@@ -8,7 +8,7 @@
     "watch": "parcel watch src/manifest.json",
     "build": "parcel build src/manifest.json",
     "serve": "web-ext --source-dir ./dist run",
-    "publish": "./publish.sh",
+    "publish": "build-scripts/publish.sh",
     "clean": "rm -fr ./dist ./publish ./.cache"
   },
   "author": "Aaron Cox",
