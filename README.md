@@ -2,16 +2,18 @@
 
 ![BB Booster Icon](./src/assets/images/bbb-icon-96.png)
 
+A browser extension with some display and usability enhancements for the onlin basketball manager game
+[BuzzerBeater](https://buzzerbeater.com).
 
-A browser extension with some display and usability enhancements for the online basketball manager game, BuzzerBeater.
-
-Light on features for the time being. The goal is to continue to add features without cluttering the UI or stomping over Supporter features.
+Currently light on features. The goal is to continue to add useful features without cluttering the UI.
 
 ## Features
 
-- Quick links to next opponent's roster and schedule
-- A *local* transferlist preset manager. 
+- Links to next opponent's roster, schedule, and stats in the Next Opponent widget
+- A transferlist preset manager. 
+- Syncing across browsers
 
 ## Browser Support
 
 - Firefox
+- Firefox for Android
