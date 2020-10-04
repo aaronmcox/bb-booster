@@ -34,5 +34,11 @@
 
   "permissions": [
     "storage"
-  ]
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "buzzer-beater-booster@aaroncox.dev"
+    }
+  }
 }

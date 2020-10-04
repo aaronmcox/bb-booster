@@ -11,7 +11,7 @@ export class Persistence {
   private _storage: browser.storage.StorageArea;
 
   constructor() {
-    this._storage = browser.storage.local;
+    this._storage = browser.storage.sync;
   }
 
   getTransferSearchPresets(): Promise<Preset<TransferSearchParameters>[]> {
